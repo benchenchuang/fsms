@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>订单详情</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="page" id="detail_box">
+
+        <h2 class="page_header">订单详情</h2>
+
+        <div class="order-area">
+            <div class="order-list" v-if="!details.state_id==0">
+                <h2 class="order-h" v-if="details.state_id!=7">
+                    <span>{{details.state_name}}</span>&nbsp;&nbsp;
+                    <span v-if="details.state_id==1" class="red" style="font-size:.24rem;">(剩余时间：15分钟)</span>
+                </h2>
+                <h2 class="order-h" v-if="details.state_id==7">
+                    <span>预订成功</span>
+                </h2>
+                <p class="order-txt" v-if="details.state_id==1">订单未支付，请尽快支付</p>
+                <a class="ord-btn btn-bg" v-if="details.state_id==1" :href="'hotel-payment.html?order_num='+details.order_num+'&order_id='+details.id">去支付</a>
+                <p class="order-txt" v-if="details.state_id==2">订单已取消</p>
+                <p class="order-txt" v-if="details.state_id==3">退款中，请耐心等待</p>
+                <p class="order-txt" v-if="details.state_id==4">您的订单已退款成功</p>
+                <p class="order-txt" v-if="details.state_id==5">您的订单退款失败，请联系客服</p>
+                <a class="ord-btn btn-bg" v-if="details.state_id==5" href="tel:021-86458425">联系客服</a>
+                <p class="order-txt" v-if="details.state_id==6">预订成功，请按时间入住</p>
+                <p class="order-txt" v-if="details.state_id==7">入住中，请勿打扰</p>
+                <p class="order-txt" v-if="details.state_id==8">请去评价您的订单</p>
+                <a class="ord-btn btn-bg" v-if="details.state_id==8" :href="'mine-orders-comment.html?check_id='+details.checkInRecords[0].id">去评价</a>
+                <p class="order-txt" v-if="details.state_id==9">您的订单已评价</p>
+            </div>
+
+
+            <div class="order-list">
+                <h2 class="order-h">在线支付：<em class='price'>¥{{details.pay_price}}</em>&nbsp;&nbsp;<span class='red' v-if="details.discount_price!=0" style='font-size:.24rem'>(优惠:¥{{details.discount_price}})</span></h2>
+                <p class="order-txt">房费：¥{{details.total_room_price}} &nbsp;&nbsp;&nbsp;&nbsp; 押金：¥{{details.total_deposit_price}}</p>
+                <span v-for="record in details.checkInRecords">
+                    <a v-if="!record.check_in_time && !record.cancel_reason" class="ord-btn btn-border cancel-order" href="javascript:void (0);" @click="cancelOrder">取消订单</a>
+                </span>
+            </div>
+
+
+
+            <div class="order-list" v-for="detail in details.details">
+                <h2 class="order-h">{{detail.hotel_name}}</h2>
+                <p class="order-txt">入离店日期</p>
+                <!--<p class="order-txt">{{detail.start_time}}-{{detail.end_time}}｜共{{step}}晚</p>-->
+                <p class="order-txt">{{(detail.start_time).substr(0,16)}} - {{(detail.end_time).substr(0,10)}} 12:00｜共{{step}}晚</p>
+                <p class="order-txt">{{detail.hotel_goods_name}}</p>
+            </div>
+        </div>
+
+        <!--订单信息-->
+        <div class="order-area">
+            <h2 class="area-header">订单信息</h2>
+            <div class="area-info">
+                <div class="section-item">
+                    <label class="item-name">房间数</label>
+                    <p class="item-val">1间</p>
+                </div>
+                <div v-for="(guest,index) in details.guest_identities">
+                    <div class="section-item get_range">
+                        <label class="item-name" v-if="index==0">入住人</label>
+                        <p class="item-val">{{guest.name}}</p>
+                    </div>
+                    <div class="section-item">
+                        <label class="item-name"></label>
+                        <p class="item-val">身份证 {{guest.id_num}}</p>
+                    </div>
+                </div>
+
+                <div class="section-item">
+                    <label class="item-name">手机号</label>
+                    <p class="item-val">{{details.contact_phone}}</p>
+                </div>
+
+                <div class="section-item">
+                    <label class="item-name">房间号</label>
+                    <p class="item-val" v-for='detail in details.details'>{{detail.hotel_room_room_num}}</p>
+                </div>
+
+                <div class="section-item">
+                    <label class="item-name">备&nbsp;&nbsp;&nbsp;注</label>
+                    <p class="item-val" v-for='detail in details.details'>{{details.special_requirement}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!--其他信息-->
+        <div class="order-area">
+            <h2 class="area-header">其他信息</h2>
+            <div class="area-info">
+                <div class="section-item">
+                    <label class="item-name">订单编号</label>
+                    <p class="item-val">{{details.order_num}}</p>
+                </div>
+                <div class="section-item get_range">
+                    <label class="item-name">预订日期</label>
+                    <p class="item-val">{{details.create_time}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!--退款信息-->
+        <div class="order-area" v-if="details.state_id==3 || details.state_id==4 || details.state_id==5">
+            <h2 class="area-header">退款信息</h2>
+            <div class="area-info">
+                <div class="section-item">
+                    <label class="item-name">退款金额</label>
+                    <p class="item-val"><span class="red">￥{{details.total_deposit_price}}</span>&nbsp;&nbsp;(押金)</p>
+                </div>
+                <div class="section-item get_range">
+                    <label class="item-name">退款方式</label>
+                    <p class="item-val">原路退回</p>
+                </div>
+                <div class="section-item get_range" style="margin-top:.2rem;padding-top:.2rem;border-top: 1px solid #e4e4e4;">
+                    <p class="red">强制退房将扣除房费，押金正常退还</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+
+                <div v-if="details.is_pay==1 && details.cancel_reason==0">
+                    <a v-if="details.state_id<7" class="pos_btn check_out" href="javascript:void(0);" @click="checkIn" alt="签到"><img src="./image/mine/qdan.png"></a>
+                    <a v-if="details.state_id==7" class="pos_btn check_out" href="javascript:void(0);" @click="checkOut" alt="退房"><img src="./image/mine/tfan.png"></a>
+                </div>
+
+                <a class="touchBack" onclick="backSmall(); setTimeout(function(){window.location.href='mine-orders.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var url=getUrlRoute();
+    var token=getCookie('token');
+    var order_id=getRequest('order_id');
+
+    new Vue({
+        el:'#detail_box',
+        data:{
+            details:[],
+            step:1
+        },
+        mounted:function(){
+            this.getDetail();
+        },
+        methods:{
+            getDetail:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/order/detail',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        order_id:order_id
+                    },
+                    success:function(result){
+                        if(result.status==200){
+                            self.details=result.data;
+                            self.getStep();
+                        }else if(result.status==100){
+                            getOut(url)
+                        }
+                    }
+
+                })
+            },
+            getStep:function(){
+                var startTime=(new Date(this.details.details[0].start_time.replace(new RegExp("-","gm"),"/"))).getTime();
+                var endTime=(new Date(this.details.details[0].end_time.replace(new RegExp("-","gm"),"/"))).getTime();
+                this.step=Math.ceil((endTime-startTime)/86400000);
+            },
+            checkIn:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/check/in',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        check_in_record_id:self.details.checkInRecords[0].id
+                    },
+                    success:function(result){
+                        if(result.status==200){
+                            $.fadeModel('签到成功');
+                            setTimeout(function(){
+                                window.location.href='mine-orders-checkin.html?order_id'+self.details.id;
+                            },500);
+                        }else{
+                            $.fadeModel(result.message);
+                        }
+                    }
+                })
+            },
+            checkOut:function(){
+                var self=this;
+                $.confirmModel('确定退房？','取消','确定',function(){
+                    $(this).parents('.mask_model').next('.mask_layer').remove();
+                    $(this).parents('.mask_model').remove();
+                    $.ajax({
+                        url:url+'/fsms/api/web/index.php/v1/check/out',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                            token:token,
+                            check_in_record_id:self.details.checkInRecords[0].id
+                        },
+                        success:function(result){
+                            if(result.status==200){
+                                window.location.href='mine-orders-checkout.html?room_name='+self.details.details[0].hotel_room_room_num+'&check_id='+self.details.checkInRecords[0].id
+                            }else{
+                                $.fadeModel(result.message);
+                            }
+                        }
+                    })
+                });
+            },
+            cancelOrder:function(){
+                $.confirmModel('订单还未支付，确定放弃？','取消','确定',function(){
+                    $(this).parents('.mask_model').next('.mask_layer').remove();
+                    $(this).parents('.mask_model').remove();
+                    $.ajax({
+                        url:url+'/fsms/api/web/index.php/v1/order/cancel',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                            token:token,
+                            order_id:order_id
+                        },
+                        success:function(result){
+                            if(result.status==200){
+                                $.fadeModel('取消成功');
+                                setTimeout(function(){
+                                    window.location.reload()
+                                },500)
+                            }else if(result.status==100){
+                                getOut(url)
+                            }
+                        }
+
+                    })
+                })
+            }
+        }
+    });
+
+</script>
+</html>

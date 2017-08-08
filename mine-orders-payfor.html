@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>订单详情</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="page">
+
+        <h2 class="page_header">订单详情</h2>
+
+        <div class="order-area">
+            <div class="order-list">
+                <h2 class="order-h">待付款</h2>
+                <p class="order-txt">请去支付您的订单</p>
+                <a class="ord-btn btn-bg" href="#">去支付</a>
+            </div>
+            <div class="order-list">
+                <h2 class="order-h">在线支付：<em class='price'>￥456.00</em></h2>
+                <p class="order-txt">房费：￥:328.00 &nbsp;&nbsp;&nbsp;&nbsp; 押金：￥128.00</p>
+                <a class="ord-btn btn-border cancel-order" href="javascript:void (0);">取消订单</a>
+            </div>
+            <div class="order-list">
+                <h2 class="order-h">上海智能酒店</h2>
+                <p class="order-txt">入离店日期</p>
+                <p class="order-txt">2017/06/26 12:00 - 2017/06/27 12:00 ｜ 共1晚</p>
+                <p class="order-txt">豪华标准房  |  有窗</p>
+            </div>
+        </div>
+
+        <!--订单信息-->
+        <div class="order-area">
+            <h2 class="area-header">订单信息</h2>
+            <div class="area-info">
+                <div class="section-item">
+                    <label class="item-name">房间数</label>
+                    <p class="item-val">1间</p>
+                </div>
+                <div class="section-item get_range">
+                    <label class="item-name">入住人</label>
+                    <p class="item-val">高山</p>
+                </div>
+                <div class="section-item">
+                    <label class="item-name"></label>
+                    <p class="item-val">身份证 321456********2548</p>
+                </div>
+                <div class="section-item">
+                    <label class="item-name">手机号</label>
+                    <p class="item-val">13245874562</p>
+                </div>
+            </div>
+        </div>
+
+        <!--其他信息-->
+        <div class="order-area">
+            <h2 class="area-header">其他信息</h2>
+            <div class="area-info">
+                <div class="section-item">
+                    <label class="item-name">订单编号</label>
+                    <p class="item-val">123456789633244564</p>
+                </div>
+                <div class="section-item get_range">
+                    <label class="item-name">预定日期</label>
+                    <p class="item-val">2017/06/18 12:30</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.history.back();},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/mine.js"></script>
+</html>

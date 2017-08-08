@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>签到</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="page">
+
+        <h2 class="page_header">签到</h2>
+
+        <div class="order-area">
+            <div class="inform-box">
+                <img src="./image/mine/qd.png">
+                <p>下载方舍名宿App</p>
+                <p>才能开启我们为您提供的智能服务！</p>
+            </div>
+        </div>
+
+        <div class="btn-link">
+            <a href="#" class="a-link a-login">下载App</a>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href='order-detail.html?order_id='+order_id;},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var order_id=getRequest('order_id');
+    new Vue({
+        el:'.bar',
+        data:{
+            order_id:order_id
+        }
+    })
+</script>
+</html>

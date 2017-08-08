@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>设置</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content clearfix" id="mine-set">
+
+        <h2 class="page_header">设置</h2>
+
+        <div class="info-list">
+            <a class="info-item edit-pwd" href="edit-pwd.html" v-if="token">
+                <span class="common-icon"><img src="image/mine/edit-pwd.png" title="修改密码"></span>
+                <span class="common-txt">修改密码</span>
+                <i class="common-more"><img src="image/next.png"></i>
+            </a>
+            <a class="info-item edit-pwd" href="login.html" v-else>
+                <span class="common-icon"><img src="image/mine/edit-pwd.png" title="修改密码"></span>
+                <span class="common-txt">修改密码</span>
+                <i class="common-more"><img src="image/next.png"></i>
+            </a>
+            <!--<a class="info-item" href="javascript:void(0);">-->
+                <!--<span class="common-icon"><img src="image/mine/clear.png" title="清除缓存"></span>-->
+                <!--<span class="common-txt">清除缓存</span>-->
+                <!--<i class="common-more"><img src="image/next.png"></i>-->
+            <!--</a>-->
+            <a class="info-item" href="about.html">
+                <span class="common-icon"><img src="image/mine/about.png" title="关于我们"></span>
+                <span class="common-txt">关于我们</span>
+                <i class="common-more"><img src="image/next.png"></i>
+            </a>
+            <a class="info-item" href="javascript:void(0);">
+                <span class="common-icon"><img src="image/mine/bb.png" title="版本号1"></span>
+                <span class="common-txt">版本号1.0</span>
+            </a>
+        </div>
+
+        <div class="btn-link" v-if="token" >
+            <a href="javascript:void(0);" class="a-link a-login signout_btn">退出登录</a>
+        </div>
+
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href='mine.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var token=getCookie('token');
+    new Vue({
+        el:'#mine-set',
+        data:{
+            token:token
+        }
+    })
+</script>
+</html>

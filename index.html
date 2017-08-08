@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <!--禁止缩放-->
+    <meta name="format-detection" content="telephone=no"/>
+    <!--忽略数字为电话号码-->
+    <title>方舍民宿</title>
+    <meta name="description" content="方舍民宿"/>
+    <meta name="keywords" content="方舍民宿"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/dateRange.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+
+</head>
+<body style="background-image:url(image/base/base_bg.jpg); width:100%; background-size: cover;" id="isBase">
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content">
+        <div class="t-title">
+            <h1 class="p-title">预订酒店</h1>
+        </div>
+
+        <div class="c-30">
+            <div class="txt-panel clearfix">
+                <form>
+                    <div class="loct-p fl">
+                        <p>地点</p>
+                        <input type="text" class="input-txt input-loct" id="select_city" placeholder="下一站去哪儿？" readonly>
+                    </div>
+                    <div class="date-p fr">
+                        <p>日期</p>
+                        <input type="text" class="input-txt input-date" id="choseDate" placeholder="选择日期" readonly>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="btn-link">
+            <a href="javascript:void(0);" class="a-link reserve_btn">预订酒店</a>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <ul class="other-bar">
+                <a href="index.html"><li class="clearfix">首页<span></span></li></a>
+                <a href="mine.html"><li class="clearfix">我的<span></span></li></a>
+            </ul>
+            <div class="bar">
+                <a class="touchArea touchImg"></a>
+            </div>
+        </div>
+
+
+    </div>
+    <!--content-->
+
+    <!--选择目的地-->
+        <div class="loct-panel dis_none" id="local-panel">
+            <div class="loct-title">
+                <a><img src="image/base/close.png"></a>
+                <p>选择目的地</p>
+            </div>
+
+            <!--<div class="c-30 loct-now">-->
+                <!--<p>当前位置</p>-->
+                <!--<span class="loct-cont"><img src="image/base/loc.png"><span id="result"></span></span>-->
+            <!--</div>-->
+
+            <div class="c-30 loct-city">
+                <!--<p>热门城市</p>-->
+                <div class="city-cont">
+                    <a  v-for="city in citys" :data-id="city.city_id">{{city.city_name}}</a>
+                </div>
+            </div>
+
+        </div>
+    <!--选择目的地 end-->
+
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dateRange.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/vue.js"></script>
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=3419b918f3f81909188d873abc5b345b&plugin=AMap.Geocoder"></script>
+<script>
+    var url=getUrlRoute();
+    var city_id='';
+    var lng,lat,start_date,end_date;
+    var step=step;
+    //获取热门城市列表
+    new Vue({
+        el:"#local-panel",
+        data:{
+            citys:[]
+        },
+        mounted:function(){
+            this.getCitys();
+        },
+        methods:{
+            getCitys:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/site/get-hot-city-list',
+                    type:'post',
+                    dataType:'json',
+                    success:function(result){
+                        if(result.status==200){
+                            self.citys=result.data;
+                        }
+                    }
+                })
+
+            }
+        }
+    });
+    //选择日期
+    var dateRange1 = new pickerDateRange('choseDate', {
+        stopToday : true,
+        isTodayValid : false,
+        startDate: '',
+        endDate: '',
+        needCompare : false,
+        defaultText : '/',
+        autoSubmit : false,
+        inputTrigger : 'input_trigger1',
+        theme : 'ta',
+        success : function(obj) {
+            start_date=obj.startDate;
+            end_date=obj.endDate;
+        }
+    });
+
+    //选择检索城市
+    $(document).on('click','.city-cont a',function(){
+        city_id=$(this).attr('data-id');
+        $("#select_city").val($(this).text());
+        $(".loct-panel").slideToggle(300);
+    });
+
+    // 获取经纬度
+    if (navigator.geolocation)
+    {
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                lng = position.coords.longitude;
+                lat = position.coords.latitude;
+
+            }
+        );
+    }
+
+//    setTimeout(function(){
+//        // 高德地图API功能
+//        lnglatXY = [lng,lat]; //已知点坐标
+//        regeocoder();
+//        function regeocoder() {  //逆地理编码
+//            var geocoder = new AMap.Geocoder({
+//                radius: 1000,
+//                extensions: "all"
+//            });
+//            geocoder.getAddress(lnglatXY, function(status, result) {
+//                if (status === 'complete' && result.info === 'OK') {
+//                    geocoder_CallBack(result);
+//                }
+//            });
+//        }
+//        function geocoder_CallBack(data) {
+//            var address = data.regeocode.formattedAddress; //返回地址描述
+//            document.getElementById("result").innerHTML = address;
+//        }
+//    },500);
+//
+
+    //搜索
+    $('.reserve_btn').click(function(){
+
+        try{
+            if(!city_id){
+                throw new Error('请选择城市');
+            }
+            if(!start_date){
+                throw new Error('请选择入住日期');
+            }
+            if(!end_date){
+                throw new Error('请选择离店日期');
+            }
+        }catch (e){
+            $.fadeModel(e.message);
+            return;
+        }
+        $("#select_city").val('');
+        window.location.href='hotel-search.html?city_id='+city_id+'&start_date='+start_date+'&end_date='+end_date+'&lng='+lng+'&lat='+lat+'&step='+step;
+    });
+
+
+</script>
+
+</html>

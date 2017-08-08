@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>我的消息</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content clearfix">
+
+        <h2 class="page_header">我的消息</h2>
+
+        <div class="news_box" id="news_box">
+            <ul v-if="news">
+                <li class="news_item" :class="{ 'get_news': item.is_read>0}" v-for="item in news" @click="readNews(item.id)">
+                    <p class="news_cont">{{item.content}}</p>
+                    <em class="news_time">{{new Date(item.create_time).Format("yyyy/MM/dd hh:mm:ss")}}</em>
+                    <a class="remove" href="javascript:void(0);" @click="delNews(item.id)"><span>删 除</span></a>
+                </li>
+            </ul>
+            <div v-else>
+                <p style="text-align: center; line-height: 3;color: #767676">暂无消息内容</p>
+            </div>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href='mine.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/jquery.mobile-1.3.2.min.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var url=getUrlRoute();
+    var token=getCookie('token');
+
+    new Vue({
+        el:'#news_box',
+        data:{
+            news:[]
+        },
+        created:function(){
+            this.getNewsList();
+        },
+        methods:{
+            //获取消息数据
+            getNewsList:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/message/get-my-message-list',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            self.news=data.data;
+                            if(self.news){
+                                setCookie('max_news',data.data[0].id);
+                            }
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            },
+            //删除单个消息
+            delNews:function(id){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/message/delete',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        message_id:id
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            $.fadeModel('消息删除成功');
+                            self.getNewsList();
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            },
+            //消息已读
+            readNews: function (id) {
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/message/read',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        message_id:id
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            self.getNewsList();
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            }
+        }
+    });
+
+    //消息滑动效果
+    $(document).on("swipeleft",".news_item",function(){
+        $(this).addClass('selected').siblings().removeClass('selected');
+    });
+    $(document).on("swiperight",".news_item",function(){
+        $(this).removeClass('selected');
+    })
+</script>
+
+</html>

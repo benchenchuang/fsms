@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>优惠券</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content clearfix" id="get_ticket">
+
+        <h2 class="page_header">优惠券</h2>
+
+        <div class="tickets_box">
+            <h3 class="ticket_tip">恭喜您，获得以下优惠券！</h3>
+            <ul>
+                <li class="ticket_item ticket_on">
+                    <div class="ticket_info">
+                        <div class="ticket_num"><em>¥</em>{{price}}</div>
+                        <div class="ticket_condition">
+                            <p class="ticket_name">{{name}}</p>
+                            <p>{{price}}</p>
+                        </div>
+                    </div>
+                    <p class="ticket_date">有效期：{{(start_time).substr(0,10)}}至{{(end_time).substr(0,10)}}</p>
+                </li>
+            </ul>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href='tickets.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var url=getUrlRoute();
+    var token=getCookie('token');
+    var name=getRequest('name');
+    var limit_price=getRequest('limit_price');
+    var price=getRequest('price');
+    var start_time=getRequest('start_time');
+    var end_time=getRequest('end_time');
+
+    new Vue({
+        el:'#get_ticket',
+        data:{
+            name:name,
+            limit_price:limit_price,
+            price:price,
+            start_time:start_time,
+            end_time:end_time
+        }
+    })
+
+</script>
+</html>

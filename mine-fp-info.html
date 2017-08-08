@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>发票信息</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content clearfix" id="invoice">
+
+        <h2 class="page_header">发票信息</h2>
+        <div v-if="token">
+            <div class="info-list">
+                <div class="info-item">
+                    <span>我的可开金额：<em class="red money">{{(invoice.money/1).toFixed(2) || 0}}</em>元</span>
+                    <a href="mine-fp-list.html" class="btn-blue">明细</a>
+                </div>
+                <div class="info-item">
+                    <label class="info-title" for="fp_name">发票抬头</label>
+                    <div class="info-put">
+                        <input type="text" name="fp_name" id="fp_name" placeholder="发票抬头" :value="invoice.invoice_header"  v-model="invoice.invoice_header">
+                    </div>
+                </div>
+                <div class="info-item">
+                    <label class="info-title" for="com_name">公司税号</label>
+                    <div class="info-put">
+                        <input type="text" name="com_name" id="com_name" placeholder="公司税号" :value="invoice.duty_number" v-model="invoice.duty_number" >
+                    </div>
+                </div>
+                <div class="info-item">
+                    <label class="info-title" for="com_addr">寄送地址</label>
+                    <div class="info-put">
+                        <input type="text" name="com_addr" id="com_addr" placeholder="寄送地址" :value="invoice.address" v-model="invoice.address" >
+                    </div>
+                </div>
+                <div class="info-item">
+                    <label class="info-title" for="com-money">开票金额</label>
+                    <div class="info-put">
+                        <input type="number" name="com_name" id="com-money" v-model="invoice.kpmoney" placeholder="开票金额" onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="btn-link">
+                <a href="javascript:void(0);" class="a-link" @click="addInvoice">提 交</a>
+            </div>
+        </div>
+
+        <div v-else>
+            <p style="text-align: center;padding: .4rem 0 .2rem;">您还未登录,登录之后方可进行发票操作</p>
+            <div class="btn-link">
+                <a href="login.html" class="a-link">登 录</a>
+            </div>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href='mine.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var url=getUrlRoute();
+    var token=getCookie('token');
+    var fp_vm=new Vue({
+        el:"#invoice",
+        data:{
+            token:token,
+            invoice:[]
+        },
+        created:function(){
+            this.getInvoice();
+        },
+        methods:{
+            getInvoice:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/invoice/get-last-invoice-info',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            self.invoice=data.data;
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            },
+            addInvoice:function(){
+                var self=this;
+                var invoice=this.invoice;
+                try{
+                    if(!invoice.invoice_header){
+                        throw new Error('公司抬头不能为空')
+                    }
+                    if(!invoice.duty_number){
+                        throw new Error('公司税号不能为空')
+                    }
+                    if(!invoice.address){
+                        throw new Error('寄送地址不能为空')
+                    }
+                    if(!invoice.kpmoney){
+                        throw new Error('开票金额不能为空')
+                    }
+                    if(invoice.kpmoney>invoice.money){
+                        throw new Error('开票金额超出限度')
+                    }
+                }catch (e){
+                    $.fadeModel(e.message);
+                    return ;
+                }
+                var money=(invoice.kpmoney).toFixed(2);
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/invoice/add',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        invoice_header:invoice.invoice_header,
+                        duty_number:invoice.duty_number,
+                        address:invoice.address,
+                        money:money
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            $.fadeModel('添加成功');
+                            setTimeout(function(){
+                                fp_vm.invoice.money=fp_vm.invoice.money-money;
+                                fp_vm.invoice.kpmoney='';
+                                window.location.href='mine-fp-list.html';
+                            },1300)
+
+                        }else if(data.status==100){
+                            getOut(url);
+                        }else{
+                            $.fadeModel(data.message)
+                        }
+                    }
+                })
+            }
+        }
+    });
+
+</script>
+</html>

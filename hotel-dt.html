@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>酒店详情</title>
+    <meta name="description" content="方舍民宿"/>
+    <meta name="keywords" content="方舍民宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+
+    <link rel="stylesheet" href="css/baguetteBox.css">
+    <link rel="stylesheet" href="css/dateRange.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+    <link rel="stylesheet" href="css/swiper-3.4.2.min.css"/>
+</head>
+<body >
+<div class="wrap fade out">
+    <div id="hotel_detail">
+        <div class="bg-black dis_none" ></div>
+
+    <div class="content">
+        <!--图片banner-->
+        <div class="Img-panel swiper-container">
+            <div class="baguetteBox swiper-wrapper">
+                <a class="swiper-slide" v-for='imgItem in (hotelPic.list)' :data-link="url+'/fsms/api/web/index.php/v1/file/download?file='+imgItem.pic"><img :src="url+'/fsms/api/web/index.php/v1/file/download?file='+imgItem.pic"></a>
+            </div>
+            <div class="black-botm"><p><img src="image/hotel/img.png">{{hotelPic.total}}张 </p></div>
+        </div>
+
+        <div class="a-30 hotel-top">
+            <div class="top clearfix">
+                <p class="p-t fl">{{hotel.name}}</p>
+                <a :href="'hotel-evaluation.html?id='+hotel.id" class="fr">{{hotel.comment_num}} 评价</a>
+                <span class="fr">{{(hotel.point/1).toFixed(1)}}分</span>
+            </div>
+            <a :href="'map.html?hotel_id='+hotel.id+'&hotel_lng='+hotel.lng+'&hotel_lat='+hotel.lat+'&name='+hotel.name+'&adr='+hotel.address">
+                <dl class="bottom">
+                    <dt><img src="image/base/loc.png"></dt>
+                    <dd>{{hotel.address}}</dd>
+                </dl>
+            </a>
+            <p class="p-tel"><a  :href="'tel:'+hotel.tel">电话：{{hotel.tel}}</a></p>
+        </div>
+        <a :href="'hotel-equipment.html?id='+hotel.id+'&lng='+hotel.lng+'&lat='+hotel.lat">
+            <dl class="b-30 hotel-link clearfix">
+                <dt class="fl">酒店信息</dt>
+                <dd class="fr"><img src="image/next.png"> </dd>
+            </dl>
+        </a>
+        <!--选择日期-->
+        <div class="a-30 hotel-date" style="position: relative">
+
+            <dl>
+                <dd class="first"><input type="text" class="input-first" :value="start_date" placeholder="请选择日期" readonly></dd>
+                <input class="a-night" type="button" :value="step?step+'晚':0+'晚'" /><!--显示几晚-->
+                <dd class="last"><input type="text" class="input-last" :value="end_date" placeholder="请选择日期" readonly></dd>
+            </dl>
+
+            <input type="text" class="input-txt input-date" @click="getDateShow" id="choseDate" readonly><!--点击事件-->
+        </div>
+        <!--预定-->
+        <p class="p-yd">预订</p>
+        <div class="hotel-yd">
+            <dl class="b-30" v-for="good in (hotel.goods)">
+                <dt>{{good.name}}</dt>
+                <dd>
+                    <a class="kf-dt" @click="showDetail(good.id)">客房详情</a>
+                    <a>|</a>
+                    <a class="fj-dt" @click="showPrice(good.id)">房价详情</a>
+                </dd>
+                <dd><span>¥{{good.room_price}}</span></dd>
+                <a href="javascript:void (0);" class="a-links" @click="toPay(good.id,good.name,good.room_price,good.deposit_price)">在线付</a>
+            </dl>
+        </div>
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.history.back();},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+    <!--客房详情-->
+    <div class="kf-panel kfj-panel dis_none">
+        <div class="c-30 p-panel">
+            <p class="p-t">客房详情</p>
+
+            <div v-for="item in room">
+                <p class="p-title">{{item.key}}</p>
+                <div class="p-cont">
+                    <ul>
+                        <li v-for="det in item.value">·{{det}}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="btn-link">
+                <a href="javascript:void(0);" class="a-link" @click="closeKf">知道了，谢谢</a>
+            </div>
+        </div>
+
+    </div>
+    <!--客房详情 end-->
+
+    <!--房价详情-->
+    <div class="fj-panel kfj-panel dis_none">
+        <div class="c-30 p-panel">
+            <p class="p-t">房价详情</p>
+
+            <div v-for="pr in price">
+                <p class="p-title">{{pr.key}}</p>
+                <div class="p-cont">
+                    <p v-for="p_d in pr.value">{{p_d}}</p>
+                </div>
+            </div>
+
+            <div class="btn-link">
+                <a href="javascript:void(0);" class="a-link" @click="closeFj">知道了，谢谢</a>
+            </div>
+        </div>
+    </div>
+    <!--房价详情 end-->
+
+</div>
+</div>
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/swiper-3.4.2.jquery.min.js"></script>
+<!--图片大图轮播-->
+<script src="js/baguetteBox.js"></script>
+<!--选择日期-->
+<script src="js/dateRange.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    $(function(){
+        var url=getUrlRoute();
+        var hotel_id=getRequest('hotel_id');
+        var start_date=getRequest('start_date');
+        var end_date=getRequest('end_date');
+        var lng=getRequest('lng');
+        var lat=getRequest('lat');
+        var step=parseInt(getRequest('step'));
+        var token=getCookie('token');
+       var vm= new Vue({
+            el:'#hotel_detail',
+            data:{
+                hotel:[],
+                url:url,
+                hotelPic:[],
+                start_date:start_date,
+                end_date:end_date,
+                step:step,
+                rooms:[],
+                prices:[],
+                room:[],
+                re_room:[],
+                price:[]
+            },
+            created:function(){
+                this.getDetail();
+            },
+            watch:{
+                start_date:['getDetail','getDays'] ,
+                end_date:['getDetail','getDays']
+            },
+            methods:{
+                getDetail:function(){
+                    var self = this;
+                    $.ajax({
+                        url: url + '/fsms/api/web/index.php/v1/hotel/detail',
+                        type: 'post',
+                        data: {
+                            hotel_id: hotel_id,
+                            start_date: self.start_date,
+                            end_date: self.end_date,
+                            lng: lng,
+                            lat: lat
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.status == 200) {
+                                self.hotel = result.data;
+                                self.hotelPic=result.data.pic;
+                                var room_info=result.data.goods;
+                                room_info.forEach(function(item,index){
+                                    self.rooms[index]=item.room_info;
+                                    self.prices[index]=item.price_info;
+
+                                });
+                                self.showSlide();
+                                self.showBanner();
+                            }
+                        }
+                    })
+                },
+                showBanner:function(){
+                    setTimeout(function(){
+                        var mySwiper = new Swiper('.swiper-container', {
+                            autoplay: 3000
+                        });
+                    },100)
+                },
+                showDetail:function(id){//客房详情
+                    this.room=this.rooms[id-1];
+                    this.BGimgshow();
+                    setSite();
+                    $(".kf-panel").slideToggle(300);
+                },
+                closeKf:function(){
+                    $(".kf-panel").slideUp(300);
+                    closeBGimg()
+                },
+                showPrice: function(id) {//房价详情
+                    this.price=this.prices[id-1];
+                    this.BGimgshow();
+                    setSite();
+                    $(".fj-panel").slideToggle(300);
+                },
+                closeFj:function(){
+                    $(".fj-panel").slideUp(300);
+                    closeBGimg()
+                },
+                getDateShow:function(){
+                    $('.ta_calendar').show();
+                },
+                toPay:function(id,name,room_price,deposit_price){
+                    if(!token){
+                        window.location.href='login.html';
+                        return;
+                    }
+                    if(!this.start_date){
+                        $.fadeModel('住店日期不能为空');
+                        return;
+                    }
+                    window.location.href='hotel-reserve.html?hotel_id='+this.hotel.id+'&deposit_price='+deposit_price+'&room_price='+room_price+'&good_id='+id+'&hotel_name='+this.hotel.name+'&room_name='+name+'&start_date='+this.start_date+'&end_date='+this.end_date+'&step='+this.step;
+                },
+                getDays:function(){
+                    var days=parseInt((new Date(this.end_date)-new Date(this.start_date))/86400000);
+                    this.step=days
+                },
+                showSlide:function(){
+                    setTimeout(function(){
+                        //轮播图
+                        baguetteBox.run('.baguetteBox', {
+                            captions:true,                           //显示图片说明
+                            preload:20,                              //需要预加载图片的个数
+                            animation: 'slideIn'                     //slideIn / fadeIn
+                        });
+                    },50)
+                },
+                BGimgshow:function() {
+                    $(".bg-black").addClass("dis_block").animate({
+                        opacity: 1
+                    }, 500)
+                }
+            }
+        });
+
+
+
+        //选择日期
+        new pickerDateRange('choseDate', {
+            stopToday : true,
+            isTodayValid : false,
+            startDate: '',
+            endDate: '',
+            needCompare : false,
+            defaultText : '/',
+            autoSubmit : false,
+            inputTrigger : 'input_trigger1',
+            theme : 'ta',
+            success : function(obj) {
+                $(".input-first").val(obj.startDate);
+                $(".input-last").val(obj.endDate);
+                vm.start_date=obj.startDate;
+                vm.end_date=obj.endDate;
+            }
+        });
+
+
+
+    });
+</script>
+</html>

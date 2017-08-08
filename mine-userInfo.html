@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>个人信息</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content clearfix">
+
+        <h2 class="page_header">个人信息</h2>
+
+        <div class="info-list user-info" id="userInfo">
+            <div class="info-item" style="position: relative;">
+                <label class="info-title">头像</label>
+                <div class="user-head">
+                    <img class="img-user" :src="url+'/fsms/api/web/index.php/v1/file/download?file='+userInfo.pic"/>
+                </div>
+                <input type="hidden" name="file_id" :value="userInfo.pic">
+
+                <form id="mile_0" method="post" enctype="multipart/form-data" name="0">
+                    <input class="file-user" type="file" id="file" onchange="upload_img()" accept="image/*" name="file">
+                </form>
+
+            </div>
+
+            <div class="info-item">
+                <label class="info-title">手机号</label>
+                <div class="info-put put-right">
+                    <input type="tel" name="userphone" placeholder="手机号" :value="userInfo.phone" readOnly>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <label class="info-title">昵称</label>
+                <div class="info-put put-right">
+                    <input type="text" name="nickname"  placeholder="昵称" :value="userInfo.nickname">
+                </div>
+            </div>
+
+            <div class="info-item">
+                <label class="info-title">性别</label>
+                <div class="info-put">
+                    <div class="info-sex">
+                        <input type="radio" name="sex" id="male" value="2">
+                        <label class="sex_man" for="male">女</label>
+                    </div>
+                    <div class="info-sex">
+                        <input type="radio" name="sex" id="man" value="1">
+                        <label class="sex_man" for="man">男</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-link">
+            <a href="javascript:void(0);" class="a-link a-login user_btn">确 定</a>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.replace('mine.html','mine-userInfo.html');},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    new Vue({
+        el:'#userInfo',
+        data:{
+            token:'',
+            userInfo:[],
+            url:''
+        },
+        created:function(){
+            this.getUserInfo();
+        },
+        methods:{
+            getUserInfo:function(){
+                this.token=getCookie('token');
+                this.url=getUrlRoute();
+                var self=this;
+                $.ajax({
+                    url:self.url+'/fsms/api/web/index.php/v1/user/get-user-info',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:self.token
+                    },
+                    success:function(result){
+                        if(result.status==200){
+                            self.userInfo=result.data;
+                            if(self.userInfo.sex_id!=2){
+                                $('input[id=man]').attr('checked',true);
+                            }else{
+                                $('input[id=male]').attr('checked',true);
+                            }
+                        }else if(result.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            }
+        }
+    })
+</script>
+</html>

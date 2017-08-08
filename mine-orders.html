@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>我的订单</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+    <link rel="stylesheet" href="css/dropload.css"/>
+</head>
+<body>
+<div class="wrap fade out" id="order_box">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content clearfix" :class="{show_rencent:!is_class,show_cancel:is_class}" >
+
+        <h2 class="page_header">我的订单</h2>
+
+        <div class="order-wrap">
+            <nav class="order-nav">
+                <a class="on" href="javascript:void(0);" @click="getOrders(0)">近期</a>
+                <a href="javascript:void(0);" @click="getOrders(1)">已取消的订单</a>
+            </nav>
+            <div class="order-box recent_orders">
+                <div v-for="order in orders">
+                    <a  v-for="item in order.details" :href="'order-detail.html?order_id='+item.id" class="order-item">
+                        <h2 class="name">{{item.hotel_name}}</h2>
+                        <p class="order-txt">{{(item.start_time).substr(0,16)}} - {{(item.end_time).substr(0,10)}} 12:00</p>
+                        <p class="order-txt">{{item.hotel_goods_name}}</p>
+                        <p class="price">¥{{order.pay_price}}
+                            <em :class="{warn:order.state_id==1 || order.state_id==3 ||order.state_id==8,cancel:order.state_id==2 || order.state_id==5,success:order.state_id==4 || order.state_id==6 ||order.state_id==9}" v-if="order.state_id!=0 && order.state_id!=7">（{{order.state_name}}）</em>
+                            <em class="success" v-if="order.state_id==7">（预订成功）</em>
+                        </p>
+                        <i class="common-more"><img src="image/next.png"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar" v-if="is_payment>=0">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href='index.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+            <div class="bar" v-else>
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href='mine.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/dropload.min.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    $(function(){
+        var url=getUrlRoute();
+        var token=getCookie('token');
+        var urlStr=document.referrer;
+        var referrer=urlStr.substr(urlStr.lastIndexOf('/')+1);
+        var is_payment=referrer.indexOf('pay');
+        var page_index = 1;
+        var page_size = 10;
+
+        var Order_vm=new Vue({
+            el:'#order_box',
+            data:{
+                orders:[],
+                is_payment:is_payment,
+                is_class:0
+            },
+            created:function(){
+                this.getOrders(0);
+            },
+            methods:{
+                getOrders:function(is_cancel){
+                    this.is_class=is_cancel;
+                    page_index=2;
+                    var self=this;
+                    $.ajax({
+                        url:url+'/fsms/api/web/index.php/v1/order/list',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                            token:token,
+                            is_cancel:is_cancel,
+                            page_index:0,
+                            page_size:page_size
+                        },
+                        success:function(result){
+//                            console.log(result.data)
+                            if(result.status==200){
+                                self.orders=result.data;
+                                if(is_cancel==0){
+                                    getMore('.show_rencent',0);
+                                    $(document).find('.dropload-down:not(:last)').remove();
+                                }else{
+                                    getMore('.show_cancel',1);
+                                    $(document).find('.dropload-down:not(:first)').remove();
+                                }
+                            }else if(result.status==100){
+                                getOut(url)
+                            }
+                        }
+                    })
+                }
+            }
+        });
+
+        //router 路由
+        $('.order-nav a').on('click',function(){
+            var thisIndex=$(this).index();
+            $(this).addClass('on').siblings().removeClass('on');
+        });
+
+        function getMore(content,is_cancel){
+            $(document).find(content).dropload({
+                scrollArea : window,
+                domUp : {
+                    domClass   : 'dropload-up',
+                    domRefresh : '<div class="dropload-refresh">↓下拉刷新</div>',
+                    domUpdate  : '<div class="dropload-update">↑释放更新</div>',
+                    domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>'
+                },
+                domDown : {
+                    domClass   : 'dropload-down',
+                    domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',
+                    domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+                    domNoData  : '<div class="dropload-noData">暂无更多数据</div>'
+                },
+                loadDownFn : function(me){
+                    page_index++;
+                    $.ajax({
+                        url:url+'/fsms/api/web/index.php/v1/order/list',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                            token:token,
+                            is_cancel:is_cancel,
+                            page_index:page_index,
+                            page_size:page_size
+                        },
+                        success:function(result){
+                            if(result.status==100){
+                                getOut(url)
+                            }
+                            var arrLen = result.data;
+                            if(arrLen){
+                                for(var i=0; i<arrLen.length; i++){
+                                    Order_vm.orders.push(result.data[i]);
+                                }
+                            }else{
+                                me.lock();
+                                me.noData();
+                            }
+                            me.resetload();
+                        },
+                        error: function(xhr, type){
+                            $.fadeModel('Ajax error!');
+                            me.resetload();
+                        }
+                    });
+                },
+                threshold :50
+            });
+        }
+    });
+</script>
+</html>

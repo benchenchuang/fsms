@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>常用宾客信息</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content clearfix" id="guest">
+
+        <h2 class="page_header">常用宾客信息</h2>
+
+        <div class="info-list" v-if="token">
+            <a class="info-item info-add" href="mine-bk-edit.html">
+                <span>+ 新增常用宾客</span>
+            </a>
+            <a class="info-item" :href="'mine-bk-edit.html?name='+guest.name+'&id_num='+guest.id_num+'&id='+guest.id" v-for="guest in guests">
+                <label class="info-title max-name">{{guest.name}}</label>
+                <span class="common-txt">{{guest.id_num}}</span>
+                <i class="common-more"><img src="image/next.png"></i>
+            </a>
+        </div>
+        <div class="info-list"  v-else>
+            <a class="info-item info-add" href="login.html">
+                <span>您还未登录,请先登录</span>
+            </a>
+        </div>
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href='mine.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var token=getCookie('token');
+    var url=getUrlRoute();
+    new Vue({
+        el:'#guest',
+        data:{
+            guests:[],
+            token:token
+        },
+        mounted: function () {
+            this.getGuest();
+        },
+        methods:{
+            getGuest:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/guest-identity/list',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:self.token
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            self.guests=data.data;
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            }
+        }
+    })
+</script>
+</html>

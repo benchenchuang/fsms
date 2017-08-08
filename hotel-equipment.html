@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>酒店信息</title>
+    <meta name="description" content="方舍民宿"/>
+    <meta name="keywords" content="方舍民宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+</head>
+<body style="background-color: rgb(255,255,255)">
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content" id="hotel_info">
+        <div class="t-title">
+            <h1 class="p-title colblue">酒店信息</h1>
+        </div>
+
+        <!--可提供服务-->
+        <div class="a-30" v-if="servers.length">
+            <p class="p-hotel">可提供的服务</p>
+            <ul class="hotel-service">
+                <li v-for="server in servers"><img :src="url+'/fsms/api/web/index.php/v1/file/download?file='+server.icon" :title="server.title"></li>
+            </ul>
+        </div>
+
+
+        <div class="c-30 traffic-panel" v-if="traffic.length">
+            <p class="p-hotel">交通信息</p>
+            <dl>
+                <dt><span>·</span>地铁站</dt>
+                <dd class="clearfix">
+                    <p class="fl">周浦站</p>
+                    <span class="fr">3.5km</span>
+                </dd>
+            </dl>
+            <dl>
+                <dt><span>·</span>火车站</dt>
+                <dd class="clearfix">
+                    <p class="fl">上海南站</p>
+                    <span class="fr">15.6km</span>
+                </dd>
+                <dd class="clearfix">
+                    <p class="fl">上海站</p>
+                    <span class="fr">31.6km</span>
+                </dd>
+                <dd class="clearfix">
+                    <p class="fl">上海站</p>
+                    <span class="fr">31.6km</span>
+                </dd>
+                <dd class="clearfix">
+                    <p class="fl">上海站</p>
+                    <span class="fr">31.6km</span>
+                </dd>
+            </dl>
+            <dl>
+                <dt><span>·</span>机场</dt>
+                <dd class="clearfix">
+                    <p class="fl">上海瑞金医院高架直升机机场</p>
+                    <span class="fr">15.6km</span>
+                </dd>
+                <dd class="clearfix">
+                    <p class="fl">浦东国际机场</p>
+                    <span class="fr">31.6km</span>
+                </dd>
+                <dd class="clearfix">
+                    <p class="fl">上海虹桥机场</p>
+                    <span class="fr">31.6km</span>
+                </dd>
+                <dd class="clearfix">
+                    <p class="fl">上海浦东国际机场</p>
+                    <span class="fr">31.6km</span>
+                </dd>
+            </dl>
+        </div>
+
+        <div class="c-30 others clearfix" v-if="details.length">
+            <p class="p-hotel">酒店介绍</p>
+            <div class="fl clearfix" v-for="detail in details">
+                <small class="fl">{{detail.key}}</small>
+                <span class="fl">{{detail.value}}</span>
+            </div>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.history.back();},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var url=getUrlRoute();
+    var hotel_id=getRequest('id');
+    var lng=getRequest('lng');
+    var lat=getRequest('lat');
+
+    new Vue({
+        el:'#hotel_info',
+        data:{
+            url:url,
+            servers:[],
+            details:[],
+            traffic:[]
+        },
+        created:function(){
+            this.getDetail()
+        },
+        methods:{
+            getDetail:function(){
+                var self = this;
+                $.ajax({
+                    url: url + '/fsms/api/web/index.php/v1/hotel/detail',
+                    type: 'post',
+                    data: {
+                        hotel_id: hotel_id,
+                        lng: lng,
+                        lat: lat
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status == 200) {
+                            self.servers = result.data.service;
+                            self.details = result.data.detail;
+                        }
+                    }
+                })
+            }
+        }
+    })
+
+</script>
+
+</html>

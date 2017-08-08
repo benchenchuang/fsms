@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>我的信息</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body id="isMine">
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content" id="mine">
+        <div class="mine-box">
+            <div class="mine-top">
+                <div class="t-title">
+                    <h1 class="p-title">我的</h1>
+                </div>
+                <a  v-if="token" href="mine-userInfo.html"  class="c-30 o-tips mine-user" style="display: block;">
+                    <p class="user-name">昵称：{{userInfo.nickname}}</p>
+                    <p class="user-tel">{{userInfo.phone}}</p>
+                </a>
+                <div v-else class="c-30 o-tips mine-out">
+                    <a class="btn-loginout" href="login.html">登录/注册</a>
+                </div>
+            </div>
+        </div>
+
+        <a href="mine-bk-info.html">
+            <dl class="a-30 my-list clearfix">
+                <dt class="fl"><img src="image/mine/mine.png" title="常用宾客"></dt>
+                <dd class="fl">宾客信息</dd>
+                <dd class="fr"><img src="image/next.png"></dd>
+            </dl>
+        </a>
+
+        <a href="mine-fp-info.html">
+            <dl class="a-30 my-list clearfix">
+                <dt class="fl"><img src="image/mine/fp-nav.png" title="发票信息"></dt>
+                <dd class="fl">发票信息</dd>
+                <dd class="fr"><img src="image/next.png"></dd>
+            </dl>
+        </a>
+
+        <a href="tickets.html">
+            <dl class="a-30 my-list clearfix">
+                <dt class="fl"><img src="image/mine/yhq.png" title="优惠券"></dt>
+                <dd class="fl">优惠券</dd>
+                <dd class="fr"><img src="image/next.png"></dd>
+            </dl>
+        </a>
+
+        <a href="mine-orders.html">
+            <dl class="a-30 my-list clearfix">
+                <dt class="fl"><img src="image/mine/order.png" title="我的订单"></dt>
+                <dd class="fl">我的订单</dd>
+                <dd class="fr"><img src="image/next.png"></dd>
+            </dl>
+        </a>
+
+        <a href="news.html">
+            <dl class="a-30 my-list clearfix">
+                <dt class="fl"><img src="image/mine/news.png" title="我的消息"></dt>
+                <dd class="fl">我的消息</dd>
+                <dd class="fr"><div class="tip_circle" v-if="is_message"></div><img src="image/next.png"></dd>
+            </dl>
+        </a>
+
+        <a href="mine-setting.html">
+            <dl class="a-30 my-list clearfix">
+                <dt class="fl"><img src="image/mine/set.png" title="设置"></dt>
+                <dd class="fl">设置</dd>
+                <dd class="fr"><img src="image/next.png"></dd>
+            </dl>
+        </a>
+
+        <!--菜单-->
+        <div class="Bar">
+            <ul class="other-bar">
+                <a href="index.html"><li class="clearfix">首页<span></span></li></a>
+                <a href="mine.html"><li class="clearfix">我的<span></span></li></a>
+            </ul>
+            <div class="bar">
+                <a class="touchArea touchImg "></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+
+    var token=getCookie('token');
+    var url=getUrlRoute();
+    var old_news=getCookie('max_news');
+
+    new Vue({
+        el:'#mine',
+        data:{
+            token:token,
+            userInfo:[],
+            url:url,
+            is_message:0
+        },
+        mounted:function(){
+            this.getUserInfo();
+            this.getNewsList();
+        },
+        methods:{
+            getUserInfo:function (){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/user/get-user-info',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token
+                    },
+                    success:function(result){
+                        if(result.status==200){
+                            self.userInfo=result.data;
+                        }
+                        else if(result.status==100){
+                            self.token='';
+                            setCookie('token','');
+                        }
+                    }
+                });
+            },
+            //获取消息数据
+            getNewsList:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/message/get-my-message-list',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            var news=data.data;
+                            if(!old_news && news){
+                                self.is_message=1;
+                            }
+                            if(old_news && news){
+                                var get_max=news[0].id;
+                                if(get_max>old_news){
+                                    self.is_message=1;
+                                }
+                            }
+
+                        }
+                        else if(data.status==100){
+                            self.token='';
+                            setCookie('token','');
+                        }
+                    }
+                })
+            }
+        }
+
+    })
+</script>
+</html>

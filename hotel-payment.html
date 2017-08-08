@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>支付订单</title>
+    <meta name="description" content="方舍民宿"/>
+    <meta name="keywords" content="方舍民宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+
+    <div class="content" id="payment">
+        <div class="t-title">
+            <h1 class="p-title colblue">支付订单</h1>
+        </div>
+
+        <!--支付信息-->
+
+        <div class="d-30 hotel-tips">
+            <ul class="clearfix">
+                <li class="fl" v-for="detail in details.details">{{detail.hotel_goods_name}}</li>
+                <li class="fr">¥{{details.total_room_price}}</li>
+            </ul>
+            <ul class="clearfix">
+                <li class="fl">押金</li>
+                <li class="fr">¥{{details.total_deposit_price}}</li>
+            </ul>
+            <ul class="clearfix" v-if="details.discount_price>0">
+                <li class="fl">优惠券</li>
+                <li class="fr">-¥{{details.discount_price}}</li>
+            </ul>
+            <ul class="clearfix">
+                <li class="fl">总计</li>
+                <li class="fr">¥{{details.pay_price}}</li>
+            </ul>
+            <ul class="clearfix">
+                <li class="fl"></li>
+                <li class="fr" v-for="detail in details.details">{{(detail.start_time).substr(0,16)}}-{{(detail.end_time).substr(0,10)}} 12:00 |共{{step}}晚</li>
+            </ul>
+
+        </div>
+
+        <p class="p-pay">支付方式</p>
+
+        <div class="a-30 pay-panel">
+            <dl class="clearfix">
+                <dt><img src="image/hotel/zfb.png">支付宝支付</dt>
+                <dd><input type="radio" value="1" name="1" v-model="pay_way"></dd>
+            </dl>
+            <dl class="clearfix">
+                <dt><img src="image/hotel/wxzf.png">微信支付</dt>
+                <dd><input type="radio" value="2" name="2" v-model="pay_way"></dd>
+            </dl>
+        </div>
+
+
+        <div class="btn-link">
+            <a href="javascript:void(0);" @click='getPayment' class="a-link">确认支付¥{{details.pay_price}}</a>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){ var order_id=getRequest('order_id');window.location.href='order-detail.html?order_id='+order_id;},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+
+    $(function(){
+        var url=getUrlRoute();
+        var token=getCookie('token');
+        var order_num=getRequest('order_num');
+        var order_id=getRequest('order_id');
+
+        //点微信的返回
+        var bool=false;
+        setTimeout(function(){
+            bool=true;
+        },1000);
+        window.addEventListener("popstate", function(e) {
+            if(bool){
+                $.confirmModel('确定取消支付','否','确定',function(){
+                    window.location.href='order-detail.html?order_id='+order_id
+                });
+            }
+            pushHistory();
+
+        }, true);
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url: "#"
+            };
+            window.history.pushState(state, "title", "#");
+        };
+
+        $(document).find("h1.p-title").css({
+            marginTop:'.3rem'
+        });
+        new Vue({
+            el:"#payment",
+            data:{
+                details:[],
+                step:1,
+                pay_way:[1]
+            },
+            created:function(){
+                this.getDetail()
+            },
+            methods:{
+                getDetail:function(){
+                    var self=this;
+                    $.ajax({
+                        url:url+'/fsms/api/web/index.php/v1/order/detail',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                            token:token,
+                            order_id:order_id
+                        },
+                        success:function(result){
+                            console.log(result)
+                            if(result.status==200){
+                                self.details=result.data;
+                                self.getStep();
+                            }else if(result.status==100){
+                                getOut(url)
+                            }
+                        }
+
+                    })
+                },
+                getStep:function(){
+                    var startTime=(new Date(this.details.details[0].start_time.replace(new RegExp("-","gm"),"/"))).getTime();
+                    var endTime=(new Date(this.details.details[0].end_time.replace(new RegExp("-","gm"),"/"))).getTime();
+                    this.step=Math.ceil((endTime-startTime)/86400000);
+                },
+                getPayment:function(){
+                    var self=this;
+                    $.ajax({
+                        url:url+'/fsms/api/web/index.php/v1/order/fake-callback',
+                        type:'post',
+                        dataType:'json',
+                        data:{
+                            order_num:order_num,
+                            price:self.details.pay_price
+                        },
+                        success:function(result){
+                            if(result.status==200){
+                                $.fadeModel('支付成功');
+                                setTimeout(function(){
+                                    window.location.href='pay_success.html';
+                                },500)
+                            }else if(result.status==100){
+                                getOut(url)
+                            }else{
+                                $.fadeModel(result.message);
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    });
+
+</script>
+
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>编辑常用宾客</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content clearfix" id="edit_guest">
+
+        <h2 v-if="label_name" class="page_header">编辑常用宾客</h2>
+        <h2 v-else class="page_header">新建常用宾客</h2>
+
+        <div class="info-list">
+            <div class="info-item">
+                <label class="info-title" for="fp_name">姓名</label>
+                <div class="info-put">
+                    <input type="text" name="fp_name" id="fp_name" placeholder="姓名" v-model="name">
+                </div>
+            </div>
+
+            <div class="info-item">
+                <label class="info-title" for="com_name">身份证</label>
+                <div class="info-put">
+                    <input type="text" name="id_name" id="com_name" placeholder="身份证号码" :value="id_num">
+                </div>
+            </div>
+        </div>
+
+        <div v-if="label_name">
+            <div class="btn-link">
+                <a href="javascript:void(0);" class="a-link" @click="updateGuest">更 新</a>
+            </div>
+            <div class="btn-link" style="margin-top: .5rem">
+                <a href="javascript:void(0);" class="a-btn" @click="delGuest">删 除</a>
+            </div>
+        </div>
+        <div v-else>
+            <div class="btn-link">
+                <a href="javascript:void(0);" class="a-link" @click="addGuest">确 认</a>
+            </div>
+        </div>
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.history.back();},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var token=getCookie('token');
+    var url=getUrlRoute();
+    var name=getRequest('name');
+    var id_num=getRequest('id_num');
+    var guest_id=getRequest('id');
+
+    new Vue({
+        el:'#edit_guest',
+        data:{
+            name:name,
+            id_num:id_num,
+            label_name:name
+        },
+        methods:{
+            addGuest:function(){
+                var self=this;
+                var id_name=$('input[name=id_name]').val();
+                var id_patten=/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i;
+                try{
+                    if(!this.name){
+                        throw new Error('姓名不能为空')
+                    }
+                    if(!(id_patten.test(id_name))){
+                        throw new Error('身份证号码错误')
+                    }
+                }catch (e){
+                    $.fadeModel(e.message);
+                    return false;
+                }
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/guest-identity/add',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        name:self.name,
+                        id_num:id_name
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            $.fadeModel('添加成功');
+                            setTimeout(function(){
+                                window.location.href='mine-bk-info.html';
+                            },500);
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            },
+            updateGuest:function(){
+                var self=this;
+                var id_name=$('input[name=id_name]').val();
+                var id_patten=/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i;
+                try{
+                    if(!this.name){
+                        throw new Error('姓名不能为空')
+                    }
+                    if(!(id_patten.test(id_name))){
+                        throw new Error('身份证号码错误')
+                    }
+                }catch (e){
+                    $.fadeModel(e.message);
+                    return false;
+                }
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/guest-identity/update',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        name:self.name,
+                        id_num:id_name,
+                        id:guest_id
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            $.fadeModel('更新成功');
+                            setTimeout(function(){
+                                window.location.href='mine-bk-info.html';
+                            },500);
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            },
+            delGuest:function(){
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/guest-identity/delete',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        id:guest_id
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            $.fadeModel('删除成功');
+                            setTimeout(function(){
+                                window.location.href='mine-bk-info.html';
+                            },500);
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            }
+        }
+    });
+
+</script>
+</html>

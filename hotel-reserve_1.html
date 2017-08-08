@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>预订酒店</title>
+    <meta name="description" content="方舍民宿"/>
+    <meta name="keywords" content="方舍民宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out" id="reserve">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content">
+        <div class="t-title">
+            <h1 class="p-title colblue">预订酒店</h1>
+        </div>
+
+        <!--预订信息-->
+        <div class="d-30 hotel-tips">
+            <p class="p-t">{{hotel_name}}</p>
+            <p class="p-other">入离店日期</p>
+            <p class="p-other">{{start_date}} 12:00 - {{end_date}} 12:00 | 共{{step}}晚</p>
+            <p class="p-other">{{room}}</p>
+        </div>
+
+        <div class="d-30 hotel-tips">
+            <p class="colred">强制退房将扣除房费，押金正常退还</p>
+            <dl class="clearfix">
+                <dt>房间数</dt>
+                <dd>1</dd>
+            </dl>
+            <dl class="clearfix">
+                <dt>入住人</dt>
+                <dd><a class="a-person">选择入住人</a></dd>
+            </dl>
+            <div class="rzr-panel" v-if="guest.length">
+                <dl class="rzr clearfix ">
+                    <dt style="width: 100%;" v-for="(item,id) in guest"><img @click="cancelGuest(id)" src="image/hotel/red.png"><span>{{item.split('@')[0]}}</span>身份证{{item.split('@')[1]}}</dt>
+                </dl>
+            </div>
+            <dl class="clearfix">
+                <dt>联系手机</dt>
+                <dd><input type="text" class="input-txt" placeholder="请输入联系人手机号" v-model="phone"></dd>
+            </dl>
+            <dl class="clearfix">
+                <dt>优惠券</dt>
+                <dd v-if="couponShow"><a href="javascript:void(0);" @click="showCoupon"><span class="red" v-if="user_coupon_price">-￥{{ user_coupon_price}}</span><span v-else>使用优惠券</span><img src="image/next.png"></a></dd>
+                <dd v-else><a href="javascript:void(0);" style="color:#aaa">无可用优惠券<img src="image/next.png"></a></dd>
+            </dl>
+            <dl class="clearfix">
+                <dt>特别要求</dt>
+                <dd class="fl" style="text-align: left;">
+                    <textarea rows="1" placeholder="输入内容" maxlength="280" v-model="special_requirement"></textarea>
+                </dd>
+            </dl>
+        </div>
+
+        <div class="d-30 hotel-tips">
+            <p class="p-t">费用摘要</p>
+            <ul class="clearfix">
+                <li class="fl">房费</li>
+                <li class="fr">¥{{room_price*step}}</li>
+            </ul>
+            <ul class="clearfix">
+                <li class="fl">押金</li>
+                <li class="fr">¥{{deposit_price}}</li>
+            </ul>
+            <ul class="clearfix" v-if="user_coupon_price">
+                <li class="fl">优惠券</li>
+                <li class="fr">-¥{{user_coupon_price}}</li>
+            </ul>
+            <ul class="clearfix">
+                <li class="fl">总计</li>
+                <li class="fr">¥{{(parseFloat(room_price*step)+parseFloat(deposit_price)-parseFloat(user_coupon_price)).toFixed(2)}}</li>
+            </ul>
+
+        </div>
+
+        <div class="btn-link">
+            <a href="javascript:void(0);" class="a-link" @click="goReserve">立即预定¥{{(parseFloat(room_price*step)+parseFloat(deposit_price)-parseFloat(user_coupon_price)).toFixed(2)}}</a>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.history.back();},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+    <!--选择入住人-->
+    <div class="chose-person">
+        <div class="top clearfix">
+            <a class="fl">取消</a>
+            <a class="fr">确定</a>
+        </div>
+        <a class="new-person" href="javascript:void(0);" @click="showAddGuest">+新增入住人</a>
+        <div class="person-list">
+            <dl v-for="friend in friends">
+                <dt><span>{{friend.name}}</span>身份证{{friend.id_num}}</dt>
+                <dd><input type="checkbox" :value="friend.name+'@'+friend.id_num" v-model="guest"></dd>
+                <!--<dd><i class="i-noChose"></i></dd>-->
+            </dl>
+        </div>
+    </div>
+    <!--选择入住人 end-->
+    <div id="use_coupon">
+        <h2 class="page_header">优惠券</h2>
+        <div class="tickets_box">
+            <ul>
+                <li class="ticket_item ticket_on" v-for="coupon in coupons" v-if="parseFloat(room_price)>=parseFloat(coupon.limit_price)" :data-id="coupon.id" @click="getUse(coupon.id,coupon.price)">
+                    <div class="ticket_info">
+                        <div class="ticket_num"><em>￥</em>{{coupon.price}}</div>
+                        <div class="ticket_condition">
+                            <p class="ticket_name">{{coupon.name}}</p>
+                            <p>{{coupon.price}}</p>
+                        </div>
+                    </div>
+                    <p class="ticket_date">有效期：{{(coupon.use_start_time).substr(0,10)}} 至 {{(coupon.use_end_time).substr(0,10)}}</p>
+                </li>
+
+            </ul>
+            <div class="btn-link">
+                <a href="javascript:void(0);" class="a-link" @click="cancelTicket">不使用优惠券</a>
+            </div>
+        </div>
+    </div>
+
+    <!--添加入住人-->
+    <div id="add_guest">
+        <h2 class="page_header">添加常用宾客</h2>
+
+        <div class="info-list">
+            <div class="info-item">
+                <label class="info-title" for="fp_name">姓名</label>
+                <div class="info-put">
+                    <input type="text" name="fp_name" id="fp_name" placeholder="姓名">
+                </div>
+            </div>
+
+            <div class="info-item">
+                <label class="info-title" for="com_name">身份证</label>
+                <div class="info-put">
+                    <input type="number" name="id_name" id="com_name" placeholder="身份证号码">
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="btn-link">
+                <a href="javascript:void(0);" class="a-link" @click="addGuest">添 加</a>
+                <a href="javascript:void(0);" class="a-btn" style="margin-top: .4rem" @click="closeGuest">取 消</a>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var url=getUrlRoute();
+    var token=getCookie('token');
+    var hotel_good_id=getRequest('good_id');
+    var start_date=getRequest('start_date');
+    var end_date=getRequest('end_date');
+    var hotel_name=getRequest('hotel_name');
+    var step=getRequest('step');
+    var room=getRequest('room_name');
+    var hotel_id=getRequest('hotel_id');
+    var deposit_price=getRequest('deposit_price');
+    var room_price=getRequest('room_price');
+
+    new Vue({
+        el:'#reserve',
+        data:{
+            start_date:start_date,
+            end_date:end_date,
+            hotel_name:hotel_name,
+            step:step,
+            room:room,
+            phone:"",
+            guest:[],
+            user_coupon_id:'',
+            user_coupon_price:0,
+            special_requirement:'',
+            coupons:[],
+            friends:[],
+            room_price:room_price,
+            deposit_price:deposit_price,
+            couponShow:''
+        },
+        created:function(){
+            this.getTickets();
+            this.getGuests();
+
+        },
+        methods:{
+            goReserve:function(){
+                var self=this;
+                var pattern=/^1(3|4|5|7|8)\d{9}$/;
+                try{
+                    if(!self.phone){
+                        throw new Error('手机号不能为空');
+                    }
+                    if(!(pattern.test(self.phone))){
+                        throw new Error('手机号不正确');
+                    }
+                    if(!(self.guest.length)){
+                        throw new Error('入住人不能为空');
+                    }
+                }catch(e){
+                    $.fadeModel(e.message);
+                    return;
+                }
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/order/place',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        hotel_goods_id:hotel_good_id,
+                        start_date:start_date,
+                        end_date:end_date,
+                        phone:self.phone,
+                        guests:self.guest,
+                        user_coupon_id:self.user_coupon_id,
+                        special_requirement:self.special_requirement
+
+                    },
+                    success:function(result){
+                        if(result.status==200){
+                            var order_num=result.data.order_num;
+                            var order_id=result.data.order_id;
+                            window.location.href='hotel-payment.html?order_num='+order_num+'&order_id='+order_id;
+                        }else if(result.status==100){
+                            getOut(url);
+                        }else{
+                            $.fadeModel(result.message)
+                        }
+                    }
+                })
+            },
+            getTickets:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/coupon/get-my-coupon-list',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token
+                    },
+                    success:function(result){
+                        if(result.status==200){
+                            self.coupons=result.data;
+                            self.isCoupon();
+                        }else if(result.status==100){
+                            getOut(url);
+                        }
+                    }
+                });
+
+            },
+            showCoupon:function(){
+                $('#use_coupon').animate({
+                    opacity:1,
+                    zIndex:101
+                },300);
+            },
+            getUse:function(id,num){
+                this.user_coupon_id=id;
+                this.user_coupon_price=num;
+                $('#use_coupon').animate({
+                    opacity:0,
+                    zIndex:-2
+                },300);
+            }
+            ,
+            isCoupon:function(){
+                var self=this;
+                var arr=self.coupons;
+                for(var i=0;i<arr.length;i++){
+                    if(parseFloat(arr[i].limit_price)<=parseFloat(self.room_price)){
+                        self.couponShow=1;
+                    }
+                }
+            },
+            getGuests:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/guest-identity/list',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            self.friends=data.data;
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                })
+            },
+            showAddGuest:function(){
+                $('#add_guest').animate({
+                    opacity:1,
+                    zIndex:999
+                },300);
+            },
+            addGuest:function(){
+                var self=this;
+                var name=$('.info-item input[name=fp_name]').val();
+                var id_name=$('.info-item  input[name=id_name]').val();
+                var id_patten=/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i;
+                try{
+                    if(!name){
+                        throw new Error('姓名不能为空')
+                    }
+                    if(!(id_patten.test(id_name))){
+                        throw new Error('身份证号码错误')
+                    }
+                }catch (e){
+                    $.fadeModel(e.message);
+                    return;
+                }
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/guest-identity/add',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        token:token,
+                        name:name,
+                        id_num:id_name
+                    },
+                    success:function(data){
+                        if(data.status==200){
+                            $.fadeModel('添加成功');
+                            self.getGuests();
+                            $('#add_guest').animate({
+                                opacity:0,
+                                zIndex:-2
+                            },300);
+                        }else if(data.status==100){
+                            getOut(url);
+                        }
+                    }
+                });
+
+            }
+            ,
+            cancelGuest:function(id){
+                this.guest.splice(id,1)
+            },
+            cancelTicket:function(){
+                this.user_coupon_id='';
+                this.user_coupon_price=0;
+                $('#use_coupon').animate({
+                    opacity:0,
+                    zIndex:-2
+                },300);
+            },
+            closeGuest:function(){
+                $('#add_guest').animate({
+                    opacity:0,
+                    zIndex:-2
+                },300);
+            }
+        }
+    });
+    //弹出层禁止滑动
+    $(document).on("touchmove",'#add_guest',function(e){
+        e.preventDefault();
+    });
+</script>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <!--禁止缩放-->
+    <meta name="format-detection" content="telephone=no"/>
+    <!--忽略数字为电话号码-->
+    <title>修改密码</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+
+
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content">
+        <div class="t-title">
+            <h1 class="p-title colblue">修改密码</h1>
+        </div>
+
+        <div class="a-30 regist-panel edit-panel">
+            <dl class="clearfix">
+                <dt><img src="image/base/passw.png" title="请输入旧密码"> </dt>
+                <dd><input type="password" placeholder="请输入旧密码" class="input-txt old-pwd"></dd>
+            </dl>
+            <dl class="clearfix">
+                <dt><img src="image/base/passw.png" title="请输入新密码"> </dt>
+                <dd><input type="password" placeholder="请输入新密码" class="input-txt new-pwd"></dd>
+            </dl>
+            <dl class="clearfix">
+                <dt><img src="image/base/passw.png" title="请重复新密码"> </dt>
+                <dd><input type="password" placeholder="请重复新密码" class="input-txt new-repwd"></dd>
+            </dl>
+        </div>
+
+        <div class="btn-link">
+            <a href="javascript:void(0);" class="a-link a-login edit_btn">确定修改</a>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <!--<ul class="other-bar">-->
+                <!--<a href="base.html"><li class="clearfix">首页<span></span></li></a>-->
+                <!--<a href="mine.html"><li class="clearfix">我的<span></span></li></a>-->
+            <!--</ul>-->
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href= 'mine-setting.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+
+    </div>
+    <!--content-->
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/fsms.js"></script>
+</html>

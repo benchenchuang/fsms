@@ -1,0 +1,1408 @@
+body{
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    background-color:rgb(247,247,247);
+}
+.content{
+    padding-bottom:.2rem;
+}
+.t-title{
+    position: relative;
+    height: 1.05rem;
+    /*line-height:1.05rem;*/
+}
+.colblue{
+    color: #2c3144!important;
+}
+h1.p-title{
+    font-size: .34rem;
+    color: #ffffff;
+    font-weight: bold;
+    position: absolute;
+    margin-top: .8rem;
+    margin-left: .3rem;
+}
+
+/**菜单**/
+.touchArea{
+    display: block;
+    position: fixed;
+    bottom: 1rem;
+    right: .35rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    z-index: 100;
+}
+.touchImg{
+    background-image: url("../image/bar.png");
+    background-size: cover;
+}
+.touchImg-pre{
+    background-image: url("../image/bar-close.png");
+    background-size: cover;
+}
+.touchBack{
+    display: block;
+    position: fixed;
+    bottom: 1rem;
+    right: .35rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    z-index: 100;
+    background-image: url("../image/back.png");
+    background-size: cover;
+}
+
+.other-bar li{
+    position: fixed;
+    bottom: 0;
+    right: 1.15rem;
+    opacity: 0;
+    z-index: 99;
+    font-size: .28rem;
+    color: #ffffff;
+}
+.other-bar li span{
+    display: block;
+    width: .1rem;
+    height: .1rem;
+    float: right;
+    margin-left: .3rem;
+    margin-top:.15rem;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    background-color: rgb(122,122,122);
+}
+.smallImg{
+    animation:imgSmall .5s 1 ;
+    -webkit-animation:imgSmall .5s 1 ; /* Safari 和 Chrome */
+    /*animation-direction: alternate;*/
+    /*-webkit-animation-direction: alternate;*/
+}
+
+@keyframes imgSmall{
+    0% {transform:scale(1);}
+    50% {transform:scale(.7,.7);}
+    100% {transform:scale(1);}
+}
+
+@-webkit-keyframes imgSmall /*Safari and Chrome*/{
+    0% {transform:scale(1);}
+    50% {transform:scale(.7,.7);}
+    100% {transform:scale(1);}
+}
+.bgcolwhite{
+    background-color: rgb(255,255,255)!important;
+}
+
+/**首页**/
+.txt-panel{
+    background-color: rgb(255,255,255);
+    height: 1.1rem;
+    width: 100%;
+    padding-top:.3rem;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+.txt-panel div{
+    padding-left: .2rem;
+    width: 50%;
+    box-sizing: border-box;
+}
+.txt-panel div p{
+    font-size: .24rem;
+    color: #767676;
+}
+.txt-panel div input{
+    font-size: .24rem;
+    color: #2c3144;
+    width: 100%;
+    height: .32rem;
+    line-height: .32rem;
+    margin-top: .15rem;
+}
+.txt-panel div input::-webkit-input-placeholder{
+    color: #2c3144;
+}
+/**选择目的地**/
+.loct-panel,.date-panel{
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    /*top:0;*/
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(247,247,247);
+    z-index: 102;
+}
+.loct-panel .loct-title,.date-title{
+    width: 100%;
+    height: .74rem;
+    line-height: .74rem;
+    border-bottom: 1px solid #e4e4e4;
+    background-color: rgb(255,255,255);
+}
+.loct-panel .loct-title p,.date-title p{
+    font-size: .34rem;
+    color:#2c3144;
+    text-align: center;
+}
+.loct-panel .loct-title img,.date-title img{
+    width: .4rem;
+    height: .4rem;
+    position: absolute;
+    left:.3rem;
+    top:.17rem;
+}
+.loct-panel .loct-now{
+    margin-top:.35rem;
+}
+.loct-panel .loct-city{
+    margin-top:.5rem;
+}
+.loct-panel .loct-now p,.loct-panel .loct-city p{
+    font-size: .24rem;
+    color: #767676;
+    margin-bottom: .4rem;
+}
+.loct-panel .loct-city p{
+    margin-bottom: .2rem;
+}
+.loct-panel .loct-now .loct-cont{
+    display: block;
+    font-size: .24rem;
+    color: #2c3144;
+    border: 1px solid #e4e4e4;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: .2rem .3rem;
+    background-color: rgb(255,255,255);
+}
+.loct-panel .loct-now .loct-cont img{
+    width: .36rem;
+    height: .36rem;
+}
+.loct-panel .loct-city .city-cont a{
+    display: inline-block;
+    margin: 0 .14rem .2rem;
+    font-size: .24rem;
+    color: #2c3144;
+    width: 1.6rem;
+    height: .7rem;
+    line-height: .7rem;
+    text-align: center;
+    border: 1px solid #e4e4e4;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background-color: rgb(255,255,255);
+}
+/**注册**/
+.regist-panel dl{
+    width: 100%;
+    height: 1.12rem;
+    line-height: 1.12rem;
+    border-bottom: 1px solid #e4e4e4;
+    overflow: hidden;
+}
+.regist-panel dl:last-child{
+    border-bottom: none;
+}
+.regist-panel dl dt,.regist-panel dl dd{
+    float: left;
+}
+.regist-panel dl dt img{
+    width: .6rem;
+    height: .6rem;
+    background-size: 100%;
+}
+.regist-panel dl dd{
+    position: relative;
+    margin-left: .2rem;
+    width: 4.7rem;
+}
+.regist-panel dl dd input.input-txt{
+    height: .56rem;
+    line-height: .56rem;
+    width: 100%;
+    padding: .28rem 0;
+    font-size: .28rem;
+    color: #2c3144;
+}
+.regist-panel dl dd input.input-txt::-webkit-input-placeholder{
+    font-size: .28rem;
+    color: #aaaaaa;
+}
+.regist-panel dl dd .input-yzm{
+    position: absolute;
+    right:0;
+    top:0;
+    width: 1.8rem;
+    height: .55rem;
+    line-height: .55rem;
+    text-align: center;
+    font-size: .26rem;
+    color: #FFFFFF;
+    margin-top: .28rem;
+    background-color: rgb(44,49,68);
+    border-radius: .25rem;
+    -webkit-border-radius: .25rem;
+}
+.regist-panel dl dd .input-yzm[disabled]{
+    background-color: rgb(168,168,168);
+}
+.findP-link{
+    width: 100%;
+    margin-top: .4rem;
+    text-align: center;
+}
+.findP-link a{
+    font-size: .27rem;
+    color: #767676;
+}
+.regis-link{
+    width: 100%;
+    position: absolute;
+    bottom: .26rem;
+    text-align: center;
+}
+.regis-link a{
+    font-size: .27rem;
+    color: #2c3144;
+}
+/**我的**/
+.mine-top{
+    background-image: url(../image/mine/mine-top.png);
+    width: 100%;
+    height: 3.32rem;
+    background-size: cover;
+}
+.o-tips{
+    font-size: .3rem;
+    color: #FFFFFF;
+    margin-top: .6rem;
+}
+.o-tips p{
+    line-height: .34rem;
+    margin-bottom: .2rem;
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal!important;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    word-break: break-all;
+    -webkit-line-clamp: 2;/**显示2行**/
+    -webkit-box-orient: vertical;
+}
+.my-list{
+    margin-top: .25rem;
+    height: 1.1rem;
+    line-height: 1.1rem;
+}
+.my-list dt img{
+    width: .7rem;
+    height: .7rem;
+    background-size: cover;
+}
+.my-list dd{
+    font-size: .29rem;
+    color: #2c3144;
+    margin-left: .16rem;
+}
+.my-list dd img{
+    width: .4rem;
+    height: .4rem;
+    background-size: cover;
+}
+.tip_circle{
+    position: absolute;
+    right: .7rem;
+    margin-top: .5rem;
+    width: .14rem;
+    height: .14rem;
+    border-radius: 50%;
+    background: rgb(238,74,75);
+}
+
+/**酒店**/
+p.p-search{
+    font-size: .28rem;
+    color: #2c3144;
+    text-align: center;
+    line-height: .9rem;
+}
+.search-one{
+    margin-bottom: .2rem;
+}
+.search-one img.hotel-img{
+    width: 100%;
+    height: 2.4rem;
+    background-size: cover;
+}
+p.p-price{
+    width: 100%;
+    font-size: .34rem;
+    color: #f82023;
+    line-height: .9rem;
+    /*border-top: 1px solid #e4e4e4;*/
+}
+.Img-panel{
+    width: 100%;
+    max-height: 3.6rem;
+    overflow: hidden;
+    position: relative;
+}
+.Img-panel .baguetteBox img{
+    width: 100%;
+    height: 3.6rem;
+    background-size: cover;
+}
+.black-botm{
+    position: absolute;
+    bottom: 0;
+    height: .48rem;
+    line-height: .48rem;
+    background-color: rgba(0,0,0,.5);
+    width: 100%;
+    padding: 0 .3rem;
+    box-sizing: border-box;
+    z-index: 999;
+}
+.black-botm p{
+    text-align: right;
+    color: #FFFFFF;
+    font-size: .26rem;
+}
+.black-botm p img{
+    width: .34rem;
+    height: .34rem;
+    background-size: 100%;
+    margin-right: .1rem;
+    margin-top: -.06rem;
+}
+.hotel-top .top{
+    height: .9rem;
+    line-height: .9rem;
+    border-bottom: 1px solid #e4e4e4;
+}
+.hotel-top p.p-t{
+    font-size: .4rem;
+    color: #2c3144;
+    max-width: 3.5rem;
+    height: .9rem;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.hotel-top span.fr{
+    font-size: .24rem;
+    color: #ff6c00;
+}
+.hotel-top span.fl{
+    font-size: .24rem;
+    color: #ff6c00;
+    margin-left: .2rem;
+}
+.hotel-top a.fr{
+    font-size: .24rem;
+    color: #333333;
+    margin-left: .25rem;
+}
+.hotel-top dl.bottom{
+    padding: .2rem 0 .15rem 0;
+    display: box;              /* OLD - Android 4.4- */
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    /* 09版 */
+    -webkit-box-orient: horizontal;
+
+    -webkit-justify-content: flex-start ;
+    -moz-justify-content: flex-start ;
+    -ms-justify-content: flex-start ;
+    -o-justify-content: flex-start ;
+    justify-content: flex-start ;
+
+    /* 09版 */
+    -webkit-box-align: center;
+    /* 12版 */
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    -o-align-items: center;
+    align-items: center;
+    border-bottom: 1px solid #e4e4e4;
+}
+.hotel-top dl.bottom img{
+    width: .36rem;
+    height: .36rem;
+    background-size: cover;
+}
+.hotel-top dl.bottom dd{
+    font-size: .26rem;
+    color: #333333;
+    line-height: .34rem;
+    margin-left: .2rem;
+}
+.hotel-top p.p-tel{
+    font-size: .26rem;
+    color: #333333;
+    margin-left:.56rem;
+    padding-bottom: .2rem;
+}
+.hotel-link{
+    height: .9rem;
+    line-height: .9rem;
+}
+.hotel-link dt{
+    font-size: .34rem;
+    color: #2c3144;
+}
+.hotel-link dd img{
+    width: .4rem;
+    height: .4rem;
+    background-size: cover;
+}
+.hotel-date dl{
+    padding: .15rem 0;
+    display: box;              /* OLD - Android 4.4- */
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    /* 09版 */
+    -webkit-box-orient: horizontal;
+
+    -webkit-justify-content: space-around ;
+    -moz-justify-content: space-around ;
+    -ms-justify-content: space-around ;
+    -o-justify-content: space-around ;
+    justify-content: space-around ;
+
+    /* 09版 */
+    -webkit-box-align: center;
+    /* 12版 */
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    -o-align-items: center;
+    align-items: center;
+}
+.hotel-date dd{
+    width: 2rem;
+    text-align: center;
+    vertical-align: middle;
+    font-size: .27rem;
+    color: #2c3144;
+}
+.hotel-date dd input{
+    width: 100%;
+    text-align: center;
+}
+.hotel-date dd:before{
+    display: table;
+    font-size: .24rem;
+    color: #767676;
+    margin-left: .75rem;
+    line-height: .4rem;
+}
+.hotel-date dd.first:before{
+    content: "入住";
+}
+.hotel-date dd.last:before{
+    content: "离开";
+}
+.hotel-date .a-night{
+    width:1rem;
+    height: .4rem;
+    text-align: center;
+    line-height: .4rem;
+    border-radius: .4rem;
+    -webkit-border-radius: .4rem;
+    background-color: rgb(44,49,68);
+    color: #FFFFFF;
+    font-size: .25rem;
+}
+.hotel-date .input-date{
+    position: absolute;
+    z-index: 1;
+    opacity: 0;
+    top:.1rem;
+    left: 0;
+    width:100%;
+    height: .8rem;
+    text-align: center;
+    line-height: .8rem;
+
+}
+.hotel-date .input-date::-webkit-input-placeholder{
+    color: #FFFFFF;
+}
+p.p-yd{
+    font-size: .25rem;
+    color: #000000;
+    height: .68rem;
+    line-height: .68rem;
+    background-color: rgb(255,255,255);
+    padding: 0 .3rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e4e4e4;
+}
+.hotel-yd dl{
+    padding: .2rem .3rem;
+    height: 1.54rem;
+    border-bottom: 1px solid #e4e4e4;
+    position: relative;
+}
+.hotel-yd dl dt{
+    font-size: .29rem;
+    color: #000000;
+}
+.hotel-yd dl dd a,
+.hotel-yd dl dd span{
+    font-size: .24rem;
+    color: #2c3144;
+    margin: .2rem .1rem .1rem 0;
+}
+.hotel-yd dl dd span{
+    font-size: .25rem;
+    color: #f84040;
+}
+.hotel-yd dl a.a-links{
+    position: absolute;
+    right: .3rem;
+    top: 50%;
+    -webkit-transform:translateY(-50%);
+    transform:translateY(-50%);
+    display: block;
+    width: 1.3rem;
+    height: .5rem;
+    line-height: .5rem;
+    text-align: center;
+    font-size: .25rem;
+    color: #2c3144;
+    border: 1px solid #2c3144;
+    border-radius: .16rem;
+    -webkit-border-radius: .16rem;
+}
+
+/**客房详情**/
+.kfj-panel{
+    position: fixed;
+    width: 6rem;
+    height: 96%;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: rgb(255,255,255);
+    z-index: 102;
+}
+.p-panel{
+    height: 100%;
+    overflow-y: scroll;
+    padding-bottom: .2rem;
+}
+.kfj-panel p.p-t{
+    padding-left: .2rem;
+    font-size: .39rem;
+    color: #2c3144;
+    height: 1.08rem;
+    line-height: 1.08rem;
+    border-bottom: 1px solid #e4e4e4;
+}
+.kfj-panel p.p-title{
+    padding-left: .2rem;
+    font-size: .32rem;
+    color: #2c3144;
+    line-height: .8rem;
+}
+.kfj-panel .p-cont{
+    padding: 0 .2rem;
+    font-size: .29rem;
+    color: #787878;
+}
+.kf-panel .p-cont ul{
+    text-indent: 1em;
+}
+p.p-hotel{
+    font-size: .29rem;
+    color: #2c3144;
+    line-height: 1rem;
+}
+ul.hotel-service{
+    width: 100%;
+    box-sizing: border-box;
+    display: box;              /* OLD - Android 4.4- */
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    flex-wrap: wrap;
+    /* 09版 */
+    -webkit-box-orient: horizontal;
+
+    -webkit-justify-content: space-around ;
+    -moz-justify-content: space-around ;
+    -ms-justify-content: space-around ;
+    -o-justify-content: space-around ;
+    justify-content: space-around ;
+
+    /* 09版 */
+    -webkit-box-align: center;
+    /* 12版 */
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    -o-align-items: center;
+    align-items: center;
+}
+ul.hotel-service li img{
+    width: .9rem;
+    height: .7rem;
+    background-size: cover;
+    margin: 0 .1rem .2rem .1rem;
+}
+.traffic-panel{
+    position: relative;
+    border-bottom: 1px solid #e4e4e4;
+}
+.traffic-panel p.p-hotel{
+    margin-bottom: -.2rem;
+}
+.traffic-panel a{
+    position: absolute;
+    right: .3rem;
+    top: 0;
+    line-height: 1rem;
+    font-size: .24rem;
+    color: #2197e4;
+}
+.traffic-panel img{
+    width: .3rem;
+    height: .3rem;
+    background-size: cover;
+}
+.traffic-panel dl{
+    padding: .2rem 0;
+    border-bottom: 1px solid #e4e4e4;
+}
+.traffic-panel dl:last-child{
+    border-bottom: none;
+}
+.traffic-panel dl dt{
+    font-size: .24rem;
+    color: #2c3144;
+}
+.traffic-panel dl dt span{
+    margin-right: .2rem;
+}
+.traffic-panel dl dd{
+    font-size: .24rem;
+    color: #767676;
+    line-height: .5rem;
+
+}
+.traffic-panel dl dd p{
+    padding-left: .25rem;
+}
+.others div{
+    width: 50%;
+}
+.others div small{
+    font-size: .24rem;
+    color: #767676;
+    margin-right: .3rem;
+}
+.others div span{
+    font-size: .25rem;
+    color: #333333;
+}
+.map-panel{
+    position: relative;
+    width: 100%;
+}
+.map-panel .map,.map-panel .map img{
+    width: 100%;
+    background-size: cover;
+}
+.map-panel .loct-map{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+.map-panel .loct-map a {
+    display: block;
+    width: .36rem;
+    height: .36rem;
+    position: relative;
+    left: 50%;
+    margin-left: -.18rem;
+    margin-top: 3rem;
+
+}
+.map-panel .loct-map a img{
+    width: .36rem;
+    height: .36rem;
+    background-size: 100%;
+}
+.map-panel .loct-map .loct-cont{
+    margin-top:-1.5rem;
+    position: relative;
+    width:90%;
+    left: 50%;
+    -webkit-transform:translateX(-50%);
+    transform:translateX(-50%);
+}
+.map-panel .loct-map .loct-cont dl{
+    /*position: absolute;*/
+    width: 100%;
+    padding: .1rem;
+    box-sizing: border-box;
+    /*border: 1px solid #e4e4e4;*/
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 5px 5px 5px #888888;
+    background-color: rgb(255,255,255);
+
+    display: box;              /* OLD - Android 4.4- */
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    flex-wrap: wrap;
+    /* 09版 */
+    -webkit-box-orient: horizontal;
+
+    -webkit-justify-content: space-between ;
+    -moz-justify-content: space-between ;
+    -ms-justify-content: space-between ;
+    -o-justify-content: space-between ;
+    justify-content: space-between ;
+
+    /* 09版 */
+    -webkit-box-align: center;
+    /* 12版 */
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    -o-align-items: center;
+    align-items: center;
+}
+.map-panel .loct-map .loct-cont dl:after,.map-panel .loct-map .loct-cont dl:before{
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    position: absolute;
+    margin-top: 1rem;
+}
+.map-panel .loct-map .loct-cont dl:before{    /*下边对话框小三角形的边框样式*/
+    border-top: 8px solid #FFFFFF;
+    position: absolute;
+    top:0;
+    left: 50%;
+    -webkit-transform:translateX(-50%);
+    transform:translateX(-50%);
+}
+.map-panel .loct-map .loct-cont dl dd.logo img{
+    width: .9rem;
+    height: .8rem;
+    background-size: cover;
+}
+.map-panel .loct-map .loct-cont dl dd.txt{
+    width: 65%;
+}
+.map-panel .loct-map .loct-cont dl dd p{
+    width: 100%;
+    word-break: break-all;
+}
+.map-panel .loct-map .loct-cont dl dd p.p-t{
+    font-size: .29rem;
+    color: #2c3144;
+}
+.map-panel .loct-map .loct-cont dl dd p.p-txt{
+    font-size: .24rem;
+    color: #2c3144;
+}
+.map-panel .loct-map .loct-cont dl dd.next img{
+    width: .4rem;
+    height: .4rem;
+    background-size: cover;
+}
+.hotel-tips p.p-t{
+    font-size: .29rem;
+    color: #2c3144;
+    padding: .2rem 0 .1rem 0;
+}
+.hotel-tips p.p-other{
+    font-size: .24rem;
+    color: #767676;
+    line-height: .4rem;
+}
+.hotel-tips p.p-other:last-child{
+    padding-bottom: .15rem;
+}
+.hotel-tips p.colred{
+    font-size: .24rem;
+    color: #f84040;
+    line-height: .8rem;
+    border-bottom: 1px solid #e4e4e4;
+}
+.hotel-tips dl{
+    border-bottom: 1px solid #e4e4e4;
+}
+.hotel-tips dl:last-child{
+    border-bottom: none;
+}
+.hotel-tips dl dt{
+    float: left;
+    font-size: .25rem;
+    color: #2c3144;
+    width: 30%;
+    line-height: .8rem;
+}
+.hotel-tips dl.rzr dt span{
+    display: inline-block;
+    width: 1rem;
+    margin-right: .1rem;
+}
+.hotel-tips dl dd{
+    float: right;
+    font-size: .24rem;
+    color: #767676;
+    width: 70%;
+    text-align: right;
+    line-height: .8rem;
+}
+.hotel-tips dl dd input.input-txt{
+    width: 3rem;
+    height: .34rem;
+    font-size: .28rem;
+    color: #2c3144;
+    text-align: right;
+}
+.regist-panel dl dd input.input-txt::-webkit-input-placeholder{
+    font-size: .28rem;
+    color: #aaaaaa;
+}
+.hotel-tips dl dd a.a-person{
+    display: block;
+    width: 1.8rem;
+    height: .54rem;
+    line-height: .54rem;
+    font-size: .25rem;
+    color: #FFFFFF;
+    text-align: center;
+    background-color: rgb(44,49,68);
+    border-radius: .25rem;
+    -webkit-border-radius: .25rem;
+    float: right;
+    margin-top: .13rem;
+}
+.hotel-tips dl dt img{
+    width: .44rem;
+    height: .44rem;
+    background-size: cover;
+    margin-right: .2rem;
+}
+.hotel-tips dl dd img{
+    width: .4rem;
+    height: .4rem;
+    background-size: cover;
+}
+.hotel-tips dl dd textarea{
+    font-size: .25rem;
+    color: #767676;
+    line-height: .4rem;
+    height: .4rem;
+    width: 100%;
+    margin-top: .2rem;
+
+}
+.hotel-tips dl dd textarea::-webkit-input-placeholder{
+    color: #aaaaaa;
+}
+.hotel-tips ul{
+    height: .5rem;
+    line-height: .5rem;
+}
+.hotel-tips ul li.fl{
+    font-size: .25rem;
+    color: #2c3144;
+}
+.hotel-tips ul li.fr{
+    font-size: .25rem;
+    color: #ee4a4b;
+}
+.hotel-tips ul:last-child{
+    padding-bottom: .1rem;
+}
+.hotel-tips ul:first-child{
+    padding-top: .1rem;
+}
+.chose-person{
+    position: fixed;
+    width: 100%;
+    height: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgb(247,247,247);
+    z-index: 102;
+}
+.chose-person .top{
+    height: .9rem;
+    line-height: .9rem;
+    padding: 0 .3rem;
+    box-sizing: border-box;
+}
+.chose-person .top a.fl{
+    font-size: .25rem;
+    color: #767676;
+}
+.chose-person .top a.fr{
+    font-size: .25rem;
+    color: #2197e4;
+}
+.chose-person a.new-person{
+    display: block;
+    width: 100%;
+    height: .9rem;
+    line-height: .9rem;
+    text-align: center;
+    font-size: .29rem;
+    color: #2c3144;
+    border-top:1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+}
+.chose-person .person-list{
+    width: 100%;
+    padding: 0 .3rem;
+    box-sizing: border-box;
+    max-height: 3.64rem;
+    overflow-y: scroll;
+}
+.chose-person .person-list dl{
+    height: .9rem;
+    line-height: .9rem;
+    border-bottom: 1px solid #e4e4e4;
+    font-size: .25rem;
+    color: #2c3144;
+}
+.chose-person .person-list dl dt{
+    width: 85%;
+    float: left;
+}
+.rzr-panel dl{
+    border-bottom: 1px solid #e4e4e4!important;
+}
+.chose-person .person-list dl:last-child{
+    border-bottom: none;
+}
+.chose-person .person-list dl span{
+    display: block;
+    float: left;
+    width: 1.2rem;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+}
+.chose-person .person-list dl dd i{
+    display: block;
+    width: .52rem;
+    height: .52rem;
+    margin-top: .19rem;
+}
+.chose-person .person-list dl dd{
+    position: relative;
+    width: .52rem;
+    float: right;
+}
+
+.person-list dd input[type=checkbox]:before{
+    content:'';
+    position: absolute;
+    top:50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    display: block;
+    width:.4rem;
+    height:.4rem;
+    border:1px solid #e4e4e4;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s ;
+    -ms-transition: all .3s ;
+    -o-transition: all .3s ;
+    transition: all .3s ;
+}
+.person-list dd input[type=checkbox]:checked:before{
+    content:'√';
+    position: absolute;
+    top:50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    display: block;
+    width:.4rem;
+    text-align: center;
+    height:.4rem;
+    line-height:.4rem;
+    color: #fff;
+    background: #f84040;
+    border:1px solid #f84040;
+}
+
+
+
+.chose-person .person-list dl dd i.i-noChose{
+    background-image: url(../image/hotel/chose.png);
+    background-size: cover;
+}
+.chose-person .person-list dl dd i.i-hasChose{
+    background-image: url(../image/hotel/chose-pre.png);
+    background-size: cover;
+}
+.new-panel dl dt{
+    width: 2rem;
+    font-size: .28rem;
+    color: #2c3144;
+}
+.new-panel dl dd{
+    width: 3.8rem;
+}
+.new-panel dl dd input{
+    width: 100%;
+    height: .34rem;
+    font-size: .28rem;
+    color: #2c3144;
+}
+.new-panel dl dd input::-webkit-input-placeholder{
+    color:#aaaaaa ;
+}
+p.p-pay{
+    font-size: .25rem;
+    color: #767676;
+    line-height: .55rem;
+    padding-left: .3rem;
+    margin-top: -.3rem;
+}
+.pay-panel dl{
+    border-bottom: 1px solid #e4e4e4;
+    height: .9rem;
+    line-height: .9rem;
+}
+.pay-panel dl:last-child{
+    border-bottom: none;
+}
+.pay-panel dl dt{
+    float: left;
+    width: 3rem;
+}
+.pay-panel dl dt img{
+    width: .5rem;
+    height: .5rem;
+    background-size: cover;
+    margin-right: .2rem;
+    font-size: .25rem;
+    color: #2c3144;
+}
+.pay-panel dl dd{
+    float: right;
+    width: .44rem;
+}
+.pay-panel dl dd i{
+    display: block;
+    width: .44rem;
+    height: .44rem;
+    margin-top: .23rem;
+    background-size: cover;
+}
+.pay-panel dl dd i.i-nochose{
+    background-image: url(../image/hotel/noChose.png);
+}
+.pay-panel dl dd i.i-haschose{
+    background-image: url(../image/hotel/isChose.png);
+}
+.orderOk{
+    text-align: center;
+    padding: .3rem;
+}
+.orderOk img{
+    width: 1.7rem;
+    height: 1.7rem;
+    background-size: cover;
+}
+.orderOk p{
+    font-size: .27rem;
+    color: #2c3144;
+    line-height: .5rem;
+}
+
+.atar_Show {
+    background: url(../image/hotel/star-gray.png);
+    background-position: left;
+    background-size: cover;
+    width: 1.2rem;
+    height: .225rem;
+    position: relative;
+    left: 0px;
+    top: 0px;
+}
+.atar_Show div {
+    background: url(../image/hotel/star-y.png);
+    background-position: left;
+    background-size: cover;
+    left: 0px;
+    top: 0px;
+    height: .225rem;
+}
+.evaluation-panel{
+    padding: .2rem .3rem;
+}
+.evaluation-panel .atar_Show{
+    margin-top: .45rem;
+}
+.evaluation-panel .atar_Show span{
+    position: absolute;
+    margin-top: -.65rem;
+    font-size: .25rem;
+    color: #767676;
+    left: 50%;
+    -webkit-transform:translateX(-50%);
+    transform:translateX(-50%);
+
+}
+.evaluation-panel dl.fl{
+    margin-left: .5rem;
+    font-size: .25rem;
+    color: #2c3144;
+    line-height: .4rem;
+}
+.evaluation-list .evalu-one{
+    width: 100%;
+    padding: .2rem .3rem;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e4e4e4;
+}
+.evaluation-list .evalu-one .e-left{
+    width: 24%;
+    text-align: center;
+}
+.evaluation-list .evalu-one .e-left img{
+    width: .76rem;
+    height: .76rem;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+.evaluation-list .evalu-one .e-left p{
+    font-size: .24rem;
+    color: #333333;
+    word-break: break-all;
+}
+.evaluation-list .evalu-one .e-right{
+    width: 70%;
+}
+.evaluation-list .evalu-one .e-right .top{
+    line-height: .4rem;
+}
+.evaluation-list .evalu-one .e-right .top .star-left span{
+    font-size: .24rem;
+    color: #767676;
+}
+.evaluation-list .evalu-one .e-right .top span.fr{
+    font-size: .24rem;
+    color: #2c3144;
+
+}
+.evaluation-list .evalu-one .e-right .top .star-left{
+    display: box;              /* OLD - Android 4.4- */
+    display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+    display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+    flex-wrap: wrap;
+    /* 09版 */
+    -webkit-box-orient: horizontal;
+    /* 09版 */
+    -webkit-box-align: center;
+    /* 12版 */
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
+    -o-align-items: center;
+    align-items: center;
+}
+.evaluation-list .evalu-one .e-right .middle{
+    margin: .1rem 0;
+}
+.evaluation-list .evalu-one .e-right .middle p{
+    font-size: .24rem;
+    color: #333333;
+    line-height: .34rem;
+    word-break: break-all;
+}
+.evaluation-list .evalu-one .e-right .bottom .Img-panel{
+    max-height: .82rem;
+    overflow: hidden;
+}
+.evaluation-list .evalu-one .e-right .bottom .Img-panel a img{
+    width: 1.25rem;
+    height: .82rem;
+    margin-right: .1rem;
+    background-size: cover;
+}
+.evaluation-list .evalu-one .e-right p.p-date{
+    font-size:.24rem;
+    color: #767676;
+    margin-top: .2rem;
+
+}
+
+/**按钮**/
+.a-link {
+    display: block;
+    width: 100%;
+    background-color: rgb(44,49,68);
+    border-radius: .42rem;
+    -webkit-border-radius: .42rem;
+    height: .84rem;
+    line-height: .84rem;
+    text-align: center;
+    font-size: .3rem;
+    color: #ffffff;
+    letter-spacing: .05rem;
+}
+
+.a-link:active{
+    background-color:rgba(44,49,68,.7) ;
+}
+
+/**文字提示框**/
+.bg-black{
+    width:100%;
+    height:100%;
+    background-color: rgba(40,40,40,.8);
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom: 0;
+    z-index: 99;
+}
+.mask_layer{
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(40,40,40,.8);
+    z-index: 101;
+}
+.mask_model{
+    position: fixed;
+    width: 4rem;
+    height: auto;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: rgb(255,255,255);
+    z-index: 102;
+    /*left:50%;*/
+    /*top:50%;*/
+    /*margin-left:-2.6rem;*/
+    /*-webkit-transform:translateY(-50%);*/
+    /*transform:translateY(-50%);*/
+
+}
+.model_head{
+    position: relative;
+    width: 100%;
+    height: .64rem;
+    line-height: .64rem;
+    text-align: center;
+    font-size: .3rem;
+    letter-spacing: .1rem;
+    color: #000;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background: rgb(255,255,255);
+}
+.model_head .close_icon{
+    position: absolute;
+    top: .18rem;
+    right: .2rem;
+    width: .34rem;
+    height: .34rem;
+    background-position: 0 -2.52rem;
+}
+.tip_txt{
+    padding:.3rem .2rem;
+    text-align: center;
+    line-height: .32rem;
+    font-size: .24rem;
+    color: #767676;
+    border-bottom: 1px solid #e4e4e4;
+}
+.tip_btn,.tip_btns{
+    display: block;
+    width: 100%;
+    text-align: center;
+    height: .64rem;
+    line-height: .64rem;
+    font-size: .28rem;
+    color: #2c3144;
+}
+#result{
+    display: inline-block;
+    width:80%;
+    height:100%;
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+}
+.pay-panel dl dd{
+    position: relative;
+    width: .52rem;
+}
+.pay-panel dl dd input:before{
+    content:'';
+    position: absolute;
+    top:50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    display: block;
+    width:.4rem;
+    height:.4rem;
+    border:1px solid #e4e4e4;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s ;
+    -ms-transition: all .3s ;
+    -o-transition: all .3s ;
+    transition: all .3s ;
+    border-radius: 50%;
+    background: #fff;
+}
+.pay-panel dl dd input:checked:after{
+    border-radius: 50%;
+    content:'√';
+    position: absolute;
+    top:50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    display: block;
+    width:.4rem;
+    text-align: center;
+    height:.4rem;
+    line-height:.4rem;
+    color: #fff!important;
+    border:1px solid #2c3144;
+    background: #2c3144;
+}
+

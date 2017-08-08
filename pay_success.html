@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>支付结果</title>
+    <meta name="description" content="方舍民宿"/>
+    <meta name="keywords" content="方舍民宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content" id="mine">
+        <div class="t-title">
+            <h1 class="p-title colblue">支付结果</h1>
+        </div>
+
+        <!--支付信息-->
+
+        <div class="d-30 orderOk">
+            <img src="image/hotel/order-ok.png">
+            <p>恭喜您，支付成功！</p>
+        </div>
+
+
+
+        <div class="btn-link">
+            <a href="mine-orders.html" class="a-link">进入我的订单</a>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.location.href= 'mine-orders.html';},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+    <!--content-->
+
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/common.js"></script>
+<script src="js/mine.js"></script>
+<script>
+    $(function(){
+        //点微信的返回
+        var bool=false;
+        setTimeout(function(){
+            bool=true;
+        },1000);
+        window.addEventListener("popstate", function(e) {
+            if(bool){
+                window.location.href='mine-orders.html'
+            }
+            pushHistory();
+
+        }, true);
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url: "#"
+            };
+            window.history.pushState(state, "title", "#");
+        };
+    })
+</script>
+</html>

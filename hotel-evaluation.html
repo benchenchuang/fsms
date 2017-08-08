@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>全部评价</title>
+    <meta name="description" content="方舍民宿"/>
+    <meta name="keywords" content="方舍民宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/baguetteBox.css">
+    <link rel="stylesheet" href="css/dateRange.css"/>
+    <link rel="stylesheet" href="css/dropload.css"/>
+    <link rel="stylesheet" href="css/slider.css"/>
+
+</head>
+<body style="background-color: rgb(255,255,255);">
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="content" id="praise">
+        <div class="t-title">
+            <h1 class="p-title colblue">全部评价</h1>
+        </div>
+
+        <!--评价信息-->
+        <div class="a-30 evaluation-panel clearfix">
+            <div class="atar_Show fl">
+                <div :class="praise.point"></div>
+                <span>{{(praise.point/1).toFixed(1)}}</span>
+            </div>
+            <dl class="fl">
+                <dd>住宿环境：{{(praise.point_env/1).toFixed(1)}}</dd>
+                <dd>设备质量：{{(praise.point_device/1).toFixed(1)}}</dd>
+            </dl>
+            <dl class="fl">
+                <dd>客房服务：{{(praise.point_service/1).toFixed(1)}}</dd>
+            </dl>
+        </div>
+
+        <div class=" evaluation-list">
+
+            <div class="b-30 evalu-one clearfix" v-for="item in praise.list">
+                <div class="e-left fl">
+                    <img :src="url+'/fsms/api/web/index.php/v1/file/download?file='+item.pic">
+                    <p>{{item.nickname}}</p>
+                </div>
+                <div class="e-right fr">
+                    <div class="top clearfix">
+                        <div class="star-left fl">
+                            <span>打分：</span>
+                            <div class="atar_Show">
+                                <div :class="item.point"></div>
+                            </div>
+                        </div>
+                        <span class="fr">{{item.hotel_goods_name}}</span>
+                    </div>
+                    <div class="middle">
+                        <p>{{item.content}}</p>
+                    </div>
+                    <div class="bottom">
+                        <ul data-am-widget="gallery" class="am-gallery am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-gallery-overlay clearfix" data-am-gallery="{ pureview: true }" >
+                            <li v-for="pic in item.pics" >
+                                <div class="am-gallery-item">
+                                    <img :src="url+'/fsms/api/web/index.php/v1/file/download?file='+pic.pic">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <p class="p-date">{{item.publish_time}}发表</p>
+                </div>
+            </div>
+        </div>
+
+        <!--菜单-->
+        <div class="Bar">
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.history.back();},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+    </div>
+    <!--content-->
+
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/dropload.min.js"></script>
+<script src="js/common.js"></script>
+<!--<script src="js/baguetteBox.js"></script>-->
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+
+<script>
+    var url=getUrlRoute();
+    var hotel_id=getRequest('id');
+    var page_size=10;
+    var page_index=1;
+
+    var praise_vm=new Vue({
+        el:'#praise',
+        data:{
+            praise:[],
+            url:url
+        },
+        created:function(){
+            this.getPraise();
+        },
+        methods:{
+            getPraise:function(){
+                var self=this;
+                $.ajax({
+                    url:url+'/fsms/api/web/index.php/v1/comment/list',
+                    type:'post',
+                    dataType:'json',
+                    data:{
+                        hotel_id:hotel_id
+                    },
+                    success:function(result){
+                        if(result.status==200){
+                            self.praise=result.data;
+                            self.showPoint();
+                            self.showBanner();
+                        }else{
+                            $.fadeModel(result.message)
+                        }
+                    }
+                })
+            },
+            showPoint:function(){
+                setTimeout(function(){
+                    //显示分数
+                    $(document).find(".atar_Show div").each(function() {
+                        var num=$(this).attr("class");
+                        var starWidth=num*.24;//一个星星的宽度是15px
+                        $(this).css({width:starWidth+'rem'});
+                    });
+                },500)
+            },
+            showBanner:function(){
+                $.getScript("js/amazeui.js");
+            }
+        }
+    });
+
+    $(document).find('#praise').dropload({
+        scrollArea : window,
+        domUp : {
+            domClass   : 'dropload-up',
+            domRefresh : '<div class="dropload-refresh">↓下拉刷新</div>',
+            domUpdate  : '<div class="dropload-update">↑释放更新</div>',
+            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>'
+        },
+        domDown : {
+            domClass   : 'dropload-down',
+            domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',
+            domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',
+            domNoData  : '<div class="dropload-noData">暂无更多数据</div>'
+        },
+        loadDownFn : function(me){
+            page_index ++;
+            $.ajax({
+                url:url+'/fsms/api/web/index.php/v1/comment/list',
+                type:'post',
+                dataType:'json',
+                data:{
+                    hotel_id:hotel_id,
+                    page_index:page_index,
+                    page_size:page_size
+                },
+                success:function(result){
+                    if(result.status==100){
+                        getOut(url)
+                    }
+                    var arrLen = result.data.list;
+                    if(arrLen.length){
+                        setTimeout(function(){
+                            for(var i=0; i<arrLen.length; i++){
+                                praise_vm.praise.list.push(arrLen[i]);
+                            }
+                            praise_vm.showBanner();
+                        },50)
+
+                    }else{
+                        me.lock();
+                        me.noData();
+                    }
+                    me.resetload();
+                },
+                error: function(xhr, type){
+                    $.fadeModel('Ajax error!');
+                    me.resetload();
+                }
+            });
+        },
+        threshold : 80
+    });
+</script>
+
+</html>

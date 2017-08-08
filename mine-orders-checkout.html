@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>退房结果</title>
+    <meta name="description" content="方舍名宿"/>
+    <meta name="keywords" content="方舍名宿"/>
+    <link rel="stylesheet" href="css/common.css"/>
+    <link rel="stylesheet" href="css/base.css"/>
+    <link rel="stylesheet" href="css/nprogress.css"/>
+    <link rel="stylesheet" href="css/mine.css"/>
+</head>
+<body>
+<div class="wrap fade out">
+    <!--背景遮罩-->
+    <div class="bg-black dis_none" ></div>
+
+    <div class="page" id="check_out">
+
+        <h2 class="page_header">退房结果</h2>
+
+        <div class="order-area">
+            <div class="inform-box">
+                <img src="./image/mine/tfjg.png">
+                <p>房间号 {{room_name}} 退房成功！</p>
+                <p>欢迎下次光临！</p>
+            </div>
+        </div>
+
+        <div class="btn-link">
+            <a :href="'mine-orders-comment.html?check_id='+check_id" class="a-link a-login">我要点评</a>
+        </div>
+
+
+        <!--菜单-->
+        <div class="Bar">
+            
+            <div class="bar">
+                <a class="touchBack " onclick="backSmall(); setTimeout(function(){window.history.back();},300);setTimeout(function(){removeSmallimg();},400)"></a>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/fastclick.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/fsms.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var room_name=getRequest('room_name');
+    var check_id=getRequest('check_id');
+    new Vue({
+        el:"#check_out",
+        data:{
+            room_name:room_name,
+            check_id:check_id
+        }
+    })
+</script>
+</html>
